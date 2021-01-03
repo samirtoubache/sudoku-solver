@@ -2,36 +2,33 @@ def print_board(board):
     for i in range(0, 9):
         print("| ", end="")
         for j in range(0, 9):
-            square = (i * 9) + j
-            print(str(board[square]) + " | ", end="")
+            print(str(board[i][j]) + " | ", end="")
         print()
 
 
 def main():
     board = [
-        0, 3, 7, 8, 0, 0, 2, 9, 1,
-        0, 0, 1, 7, 0, 6, 0, 3, 0,
-        5, 9, 4, 0, 2, 0, 0, 0, 0,
-        0, 0, 0, 9, 0, 0, 8, 7, 5,
-        2, 0, 0, 0, 6, 7, 0, 1, 0,
-        0, 0, 0, 0, 4, 8, 9, 0, 0,
-        3, 6, 5, 2, 0, 0, 0, 0, 0,
-        9, 0, 0, 0, 1, 3, 6, 0, 2,
-        0, 1, 0, 6, 0, 0, 3, 0, 9
+        [0, 3, 7, 8, 0, 0, 2, 9, 1],
+        [0, 0, 1, 7, 0, 6, 0, 3, 0],
+        [5, 9, 4, 0, 2, 0, 0, 0, 0],
+        [0, 0, 0, 9, 0, 0, 8, 7, 5],
+        [2, 0, 0, 0, 6, 7, 0, 1, 0],
+        [0, 0, 0, 0, 4, 8, 9, 0, 0],
+        [3, 6, 5, 2, 0, 0, 0, 0, 0],
+        [9, 0, 0, 0, 1, 3, 6, 0, 2],
+        [0, 1, 0, 6, 0, 0, 3, 0, 9]
     ]
 
     while not check_board_complete(board):
-        board = check_square(board, 0, 0)
-
-    print_board(board)
-    print()
+        if check_square(board, 0, 0):
+            print_board(board)
+            print()
 
 
 def check_board_complete(board):
     for i in range(0, 9):
         for j in range(0, 9):
-            square = (i * 9) + j
-            if board[square] == 0:
+            if board[i][j] == 0:
                 return False
 
     return True
@@ -47,58 +44,54 @@ def check_square(board, x_pos, y_pos):
 
     # cycled through every square
     if current_square == 81:
-        return board
-    elif board[current_square] != 0:
+        return True
+
+    # default number in the puzzle
+    elif board[x_pos][y_pos] != 0:
         return check_square(board, x_pos, y_pos + 1)
+
+    # blank space
     else:
-        options = {
-            1: True,
-            2: True,
-            3: True,
-            4: True,
-            5: True,
-            6: True,
-            7: True,
-            8: True,
-            9: True
-        }
+        for i in range(1, 10):
 
-        # check row
-        for i in range(x_pos * 9, (x_pos * 9) + 9):
-            if board[i] != 0:
-                options[board[i]] = False
+            # if i is a valid value for this location
+            if check_square_value(board, x_pos, y_pos, i):
+                board[x_pos][y_pos] = i
+                status = check_square(board, x_pos, y_pos + 1)
 
-        # check column
-        for j in range(y_pos, y_pos + 81, 9):
-            if board[j] != 0:
-                options[board[j]] = False
+                if not status:
+                    continue
+                else:
+                    return True
 
-        x_start = (x_pos // 3) * 3
-        y_start = (y_pos // 3) * 3
+    # If this point is reached, they are no correct values for this position, meaning a previous value is incorrect
+    # set this square to the blank value and return False indicating a previous square must be changed
+    board[x_pos][y_pos] = 0
+    return False
 
-        # check 3 x 3 square
-        for i in range(x_start, x_start + 3):
-            for j in range(y_start, y_start + 3):
-                square = (i * 9) + j
-                if board[square] != 0:
-                    options[board[square]] = False
 
-        choices = 0
+def check_square_value(board, x_pos, y_pos, value):
 
-        for key in options:
-            if options[key]:
-                choices += 1
-                # board[current_square] = key
+    # check row
+    for y in range(0, 9):
+        if board[x_pos][y] == value:
+            return False
 
-        # while not check_board_complete(board):
-        #     return check_square(board, x_pos, y_pos + 1)
+    # check column
+    for x in range(0, 9):
+        if board[x][y_pos] == value:
+            return False
 
-        if choices == 1:
-            for key in options:
-                if options[key]:
-                    board[current_square] = key
+    x_start = (x_pos // 3) * 3
+    y_start = (y_pos // 3) * 3
 
-        return check_square(board, x_pos, y_pos + 1)
+    # check 3 x 3 square
+    for i in range(x_start, x_start + 3):
+        for j in range(y_start, y_start + 3):
+            if board[i][j] == value:
+                return False
+
+    return True
 
 
 # Press the green button in the gutter to run the script.
