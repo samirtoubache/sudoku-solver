@@ -1,3 +1,7 @@
+import pygame
+import sys
+
+
 def print_board(board):
     for i in range(0, 9):
         print("| ", end="")
@@ -6,23 +10,81 @@ def print_board(board):
         print()
 
 
-def main():
-    board = [
-        [0, 3, 7, 8, 0, 0, 2, 9, 1],
-        [0, 0, 1, 7, 0, 6, 0, 3, 0],
-        [5, 9, 4, 0, 2, 0, 0, 0, 0],
-        [0, 0, 0, 9, 0, 0, 8, 7, 5],
-        [2, 0, 0, 0, 6, 7, 0, 1, 0],
-        [0, 0, 0, 0, 4, 8, 9, 0, 0],
-        [3, 6, 5, 2, 0, 0, 0, 0, 0],
-        [9, 0, 0, 0, 1, 3, 6, 0, 2],
-        [0, 1, 0, 6, 0, 0, 3, 0, 9]
-    ]
+def draw_board(screen):
 
-    while not check_board_complete(board):
-        if check_square(board, 0, 0):
-            print_board(board)
-            print()
+    x = 271
+    y = 101
+
+    background = pygame.Rect(270, 100, 51 * 9 + 1, 51 * 9 + 1)
+    pygame.draw.rect(screen, (0, 0, 0), background)
+
+    for i in range(9):
+        for j in range(9):
+
+            square = pygame.Rect(x, y, 50, 50)
+
+            pygame.draw.rect(screen, (255, 255, 255), square)
+
+            x += 51
+
+        x = 271
+        y += 51
+
+
+def main():
+
+    pygame.init()
+
+    window_width = 1000
+    window_height = 600
+
+    screen = pygame.display.set_mode((window_width, window_height))
+
+    background_colour = (255, 255, 255)
+
+    pygame.display.set_caption("Pygame test")
+
+    screen.fill(background_colour)
+
+    draw_board(screen)
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+
+        pygame.display.update()
+
+        # board1 = [
+        #     [0, 3, 7, 8, 0, 0, 2, 9, 1],
+        #     [0, 0, 1, 7, 0, 6, 0, 3, 0],
+        #     [5, 9, 4, 0, 2, 0, 0, 0, 0],
+        #     [0, 0, 0, 9, 0, 0, 8, 7, 5],
+        #     [2, 0, 0, 0, 6, 7, 0, 1, 0],
+        #     [0, 0, 0, 0, 4, 8, 9, 0, 0],
+        #     [3, 6, 5, 2, 0, 0, 0, 0, 0],
+        #     [9, 0, 0, 0, 1, 3, 6, 0, 2],
+        #     [0, 1, 0, 6, 0, 0, 3, 0, 9]
+        # ]
+        #
+        # board = [
+        #     [0, 0, 0, 7, 0, 0, 0, 0, 4],
+        #     [6, 0, 0, 0, 0, 0, 8, 0, 0],
+        #     [0, 4, 0, 5, 0, 1, 0, 0, 0],
+        #     [0, 0, 0, 1, 0, 0, 0, 0, 0],
+        #     [7, 0, 6, 0, 5, 0, 9, 0, 0],
+        #     [0, 0, 3, 0, 0, 8, 2, 0, 0],
+        #     [0, 0, 0, 2, 0, 0, 0, 0, 0],
+        #     [0, 0, 8, 0, 0, 4, 0, 9, 3],
+        #     [0, 1, 0, 0, 7, 0, 5, 0, 0]
+        # ]
+        #
+        # while not check_board_complete(board):
+        #     if check_square(board, 0, 0):
+        #         print_board(board)
+        #         print()
 
 
 def check_board_complete(board):
