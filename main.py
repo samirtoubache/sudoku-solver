@@ -48,12 +48,66 @@ def main():
 
     draw_board(screen)
 
+    font = pygame.font.SysFont(None, 48)
+
+    num = -1
+
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
 
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_0:
+                    num = 0
+                elif event.key == pygame.K_1:
+                    num = 1
+                elif event.key == pygame.K_2:
+                    num = 2
+                elif event.key == pygame.K_3:
+                    num = 3
+                elif event.key == pygame.K_4:
+                    num = 4
+                elif event.key == pygame.K_5:
+                    num = 5
+                elif event.key == pygame.K_6:
+                    num = 6
+                elif event.key == pygame.K_7:
+                    num = 7
+                elif event.key == pygame.K_8:
+                    num = 8
+                elif event.key == pygame.K_9:
+                    num = 9
+
+                print(num)
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_x = event.pos[0]
+                mouse_y = event.pos[1]
+
+                if 270 < mouse_x < 730 and 100 < mouse_y < 560:
+                    pos_x = (mouse_x - 270) // 51
+                    pos_y = (mouse_y - 100) // 51
+
+                    print("Square: " + str(pos_x) + ", " + str(pos_y))
+
+
+                    # while number:
+                    #     if event.type == pygame.MOUSEBUTTONDOWN:
+                    #         print("yoyo")
+                    #         mouse_x_2 = event.pos[0]
+                    #         mouse_y_2 = event.pos[1]
+                    #
+                    #         if 0 < mouse_x_2 < 100 and 0 < mouse_y_2 < 100:
+                    #             number = False
+
+                    text = font.render(str(num), True, (0, 0, 0,))
+
+                    num_x = 270 + 51 * pos_x + 17
+                    num_y = 100 + 51 * pos_y + 10
+
+                    screen.blit(text, (num_x, num_y))
 
         pygame.display.update()
 
