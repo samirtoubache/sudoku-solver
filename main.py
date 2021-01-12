@@ -2,7 +2,7 @@ import pygame
 import sys
 
 
-def print_board(board):
+def print_board_console(board):
     for i in range(0, 9):
         print("| ", end="")
         for j in range(0, 9):
@@ -10,10 +10,25 @@ def print_board(board):
         print()
 
 
+def print_board_gui(screen, board):
+    for i in range(0, 9):
+        for j in range(0, 9):
+            add_number_to_gui(screen, board, i, j)
+
+
 def draw_board(screen):
 
     x = 271
     y = 101
+
+    solve_button = pygame.Rect(400, 25, 200, 50)
+    pygame.draw.rect(screen, (0, 0, 0), solve_button)
+
+    font = pygame.font.SysFont(None, 32)
+
+    text = font.render("Solve Puzzle", True, (255, 255, 255))
+
+    screen.blit(text, (435, 40))
 
     background = pygame.Rect(270, 100, 51 * 9 + 1, 51 * 9 + 1)
     pygame.draw.rect(screen, (0, 0, 0), background)
@@ -31,6 +46,21 @@ def draw_board(screen):
         y += 51
 
 
+def add_number_to_gui(screen, board, pos_x, pos_y):
+    num_x = 270 + 51 * pos_x + 17
+    num_y = 100 + 51 * pos_y + 10
+
+    square = pygame.Rect(num_x, num_y, 30, 35)
+    pygame.draw.rect(screen, (255, 255, 255), square)
+
+    board_num = board[pos_y][pos_x]
+
+    font = pygame.font.SysFont(None, 48)
+    text = font.render(str(board_num), True, (0, 0, 0))
+
+    screen.blit(text, (num_x, num_y))
+
+
 def main():
 
     pygame.init()
@@ -46,9 +76,9 @@ def main():
 
     screen.fill(background_colour)
 
-    draw_board(screen)
-
     font = pygame.font.SysFont(None, 48)
+
+    draw_board(screen)
 
     board = [
         [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -62,12 +92,6 @@ def main():
         [0, 0, 0, 0, 0, 0, 0, 0, 0]
     ]
 
-    #
-    # while not check_board_complete(board):
-    #     if check_square(board, 0, 0):
-    #         print_board(board)
-    #         print()
-
     num = -1
 
     while True:
@@ -80,7 +104,7 @@ def main():
                 if event.key == pygame.K_SPACE:
                     while not check_board_complete(board):
                         if check_square(board, 0, 0):
-                            print_board(board)
+                            print_board_console(board)
                             print()
 
                 if event.key == pygame.K_0:
@@ -108,7 +132,14 @@ def main():
                 mouse_x = event.pos[0]
                 mouse_y = event.pos[1]
 
-                if 270 < mouse_x < 730 and 100 < mouse_y < 560:
+                if 400 < mouse_x < 600 and 25 < mouse_y < 75:
+
+                    while not check_board_complete(board):
+                        if check_square(board, 0, 0):
+                            print_board_gui(screen, board)
+                            print("Done")
+
+                elif 270 < mouse_x < 730 and 100 < mouse_y < 560:
                     pos_x = (mouse_x - 270) // 51
                     pos_y = (mouse_y - 100) // 51
 
@@ -120,12 +151,14 @@ def main():
                         num_y = 100 + 51 * pos_y + 10
 
                         if num == 0:
-
                             square = pygame.Rect(num_x, num_y, 30, 35)
-
                             pygame.draw.rect(screen, (255, 255, 255), square)
 
                         else:
+                            # If there is another number on the board, hide it first
+                            if board[pos_y][pos_x] != 0:
+                                square = pygame.Rect(num_x, num_y, 30, 35)
+                                pygame.draw.rect(screen, (255, 255, 255), square)
 
                             text = font.render(str(num), True, (0, 0, 0))
 
@@ -133,7 +166,7 @@ def main():
 
                         board[pos_y][pos_x] = num
 
-                        print_board(board)
+                        print_board_console(board)
 
         pygame.display.update()
 
@@ -163,7 +196,7 @@ def main():
         #
         # while not check_board_complete(board1):
         #     if check_square(board1, 0, 0):
-        #         print_board(board1)
+        #         print_board_console(board1)
         #         print()
 
 
