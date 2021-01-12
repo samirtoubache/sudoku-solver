@@ -50,6 +50,24 @@ def main():
 
     font = pygame.font.SysFont(None, 48)
 
+    board = [
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0]
+    ]
+
+    #
+    # while not check_board_complete(board):
+    #     if check_square(board, 0, 0):
+    #         print_board(board)
+    #         print()
+
     num = -1
 
     while True:
@@ -59,6 +77,12 @@ def main():
                 sys.exit()
 
             if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    while not check_board_complete(board):
+                        if check_square(board, 0, 0):
+                            print_board(board)
+                            print()
+
                 if event.key == pygame.K_0:
                     num = 0
                 elif event.key == pygame.K_1:
@@ -80,8 +104,6 @@ def main():
                 elif event.key == pygame.K_9:
                     num = 9
 
-                print(num)
-
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_x = event.pos[0]
                 mouse_y = event.pos[1]
@@ -92,22 +114,26 @@ def main():
 
                     print("Square: " + str(pos_x) + ", " + str(pos_y))
 
+                    if num != -1:
 
-                    # while number:
-                    #     if event.type == pygame.MOUSEBUTTONDOWN:
-                    #         print("yoyo")
-                    #         mouse_x_2 = event.pos[0]
-                    #         mouse_y_2 = event.pos[1]
-                    #
-                    #         if 0 < mouse_x_2 < 100 and 0 < mouse_y_2 < 100:
-                    #             number = False
+                        num_x = 270 + 51 * pos_x + 17
+                        num_y = 100 + 51 * pos_y + 10
 
-                    text = font.render(str(num), True, (0, 0, 0,))
+                        if num == 0:
 
-                    num_x = 270 + 51 * pos_x + 17
-                    num_y = 100 + 51 * pos_y + 10
+                            square = pygame.Rect(num_x, num_y, 30, 35)
 
-                    screen.blit(text, (num_x, num_y))
+                            pygame.draw.rect(screen, (255, 255, 255), square)
+
+                        else:
+
+                            text = font.render(str(num), True, (0, 0, 0))
+
+                            screen.blit(text, (num_x, num_y))
+
+                        board[pos_y][pos_x] = num
+
+                        print_board(board)
 
         pygame.display.update()
 
@@ -135,9 +161,9 @@ def main():
         #     [0, 1, 0, 0, 7, 0, 5, 0, 0]
         # ]
         #
-        # while not check_board_complete(board):
-        #     if check_square(board, 0, 0):
-        #         print_board(board)
+        # while not check_board_complete(board1):
+        #     if check_square(board1, 0, 0):
+        #         print_board(board1)
         #         print()
 
 
