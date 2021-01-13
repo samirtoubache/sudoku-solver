@@ -82,12 +82,47 @@ def clear_board(board):
             pygame.draw.rect(screen, (255, 255, 255), square)
 
 
+def get_example_board(board):
+
+    board1 = [
+        [0, 3, 7, 8, 0, 0, 2, 9, 1],
+        [0, 0, 1, 7, 0, 6, 0, 3, 0],
+        [5, 9, 4, 0, 2, 0, 0, 0, 0],
+        [0, 0, 0, 9, 0, 0, 8, 7, 5],
+        [2, 0, 0, 0, 6, 7, 0, 1, 0],
+        [0, 0, 0, 0, 4, 8, 9, 0, 0],
+        [3, 6, 5, 2, 0, 0, 0, 0, 0],
+        [9, 0, 0, 0, 1, 3, 6, 0, 2],
+        [0, 1, 0, 6, 0, 0, 3, 0, 9]
+    ]
+
+    board2 = [
+        [0, 0, 0, 7, 0, 0, 0, 0, 4],
+        [6, 0, 0, 0, 0, 0, 8, 0, 0],
+        [0, 4, 0, 5, 0, 1, 0, 0, 0],
+        [0, 0, 0, 1, 0, 0, 0, 0, 0],
+        [7, 0, 6, 0, 5, 0, 9, 0, 0],
+        [0, 0, 3, 0, 0, 8, 2, 0, 0],
+        [0, 0, 0, 2, 0, 0, 0, 0, 0],
+        [0, 0, 8, 0, 0, 4, 0, 9, 3],
+        [0, 1, 0, 0, 7, 0, 5, 0, 0]
+    ]
+
+    if board != board1:
+        return board1
+    elif board != board2:
+        return board2
+
+
 def main():
 
     font = pygame.font.SysFont(None, 48)
 
     x = 271
     y = 101
+
+    example_button = button(100, 25, 200, 50, "Example Puzzle")
+    example_button.draw()
 
     solve_button = button(400, 25, 200, 50, "Solve Puzzle")
     solve_button.draw()
@@ -108,40 +143,16 @@ def main():
         x = 271
         y += 51
 
-    # board = [
-    #     [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    #     [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    #     [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    #     [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    #     [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    #     [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    #     [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    #     [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    #     [0, 0, 0, 0, 0, 0, 0, 0, 0]
-    # ]
-
-    # board1 = [
-    #     [0, 3, 7, 8, 0, 0, 2, 9, 1],
-    #     [0, 0, 1, 7, 0, 6, 0, 3, 0],
-    #     [5, 9, 4, 0, 2, 0, 0, 0, 0],
-    #     [0, 0, 0, 9, 0, 0, 8, 7, 5],
-    #     [2, 0, 0, 0, 6, 7, 0, 1, 0],
-    #     [0, 0, 0, 0, 4, 8, 9, 0, 0],
-    #     [3, 6, 5, 2, 0, 0, 0, 0, 0],
-    #     [9, 0, 0, 0, 1, 3, 6, 0, 2],
-    #     [0, 1, 0, 6, 0, 0, 3, 0, 9]
-    # ]
-
     board = [
-        [0, 0, 0, 7, 0, 0, 0, 0, 4],
-        [6, 0, 0, 0, 0, 0, 8, 0, 0],
-        [0, 4, 0, 5, 0, 1, 0, 0, 0],
-        [0, 0, 0, 1, 0, 0, 0, 0, 0],
-        [7, 0, 6, 0, 5, 0, 9, 0, 0],
-        [0, 0, 3, 0, 0, 8, 2, 0, 0],
-        [0, 0, 0, 2, 0, 0, 0, 0, 0],
-        [0, 0, 8, 0, 0, 4, 0, 9, 3],
-        [0, 1, 0, 0, 7, 0, 5, 0, 0]
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0]
     ]
 
     print_board_gui(board)
@@ -186,6 +197,13 @@ def main():
                 mouse_x = event.pos[0]
                 mouse_y = event.pos[1]
 
+                if example_button.is_over(mouse_x, mouse_y) and (example_button.colour != (209, 209, 224)):
+                    example_button.colour = (209, 209, 224)
+                    example_button.draw()
+                elif (not example_button.is_over(mouse_x, mouse_y)) and example_button.colour != (179, 179, 204):
+                    example_button.colour = (179, 179, 204)
+                    example_button.draw()
+
                 if solve_button.is_over(mouse_x, mouse_y) and (solve_button.colour != (209, 209, 224)):
                     solve_button.colour = (209, 209, 224)
                     solve_button.draw()
@@ -203,6 +221,10 @@ def main():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_x = event.pos[0]
                 mouse_y = event.pos[1]
+
+                if example_button.is_over(mouse_x, mouse_y):
+                    board = get_example_board(board)
+                    print_board_gui(board)
 
                 if clear_button.is_over(mouse_x, mouse_y):
                     clear_board(board)
