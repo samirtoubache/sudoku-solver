@@ -133,17 +133,16 @@ def get_example_board(board):
         return board2
 
 
-def main():
+def custom_solve():
+
+    screen.fill(background_colour)
 
     font = pygame.font.SysFont(None, 48)
 
-    example_button = button(100, 25, 200, 50, "Example Puzzle")
-    example_button.draw()
-
-    solve_button = button(400, 25, 200, 50, "Solve Puzzle")
+    solve_button = button(250, 25, 200, 50, "Solve Puzzle")
     solve_button.draw()
 
-    clear_button = button(700, 25, 200, 50, "Clear Puzzle")
+    clear_button = button(550, 25, 200, 50, "Clear Puzzle")
     clear_button.draw()
 
     draw_blank_board(270, 100, 50)
@@ -202,13 +201,6 @@ def main():
                 mouse_x = event.pos[0]
                 mouse_y = event.pos[1]
 
-                if example_button.is_over(mouse_x, mouse_y) and (example_button.colour != (209, 209, 224)):
-                    example_button.colour = (209, 209, 224)
-                    example_button.draw()
-                elif (not example_button.is_over(mouse_x, mouse_y)) and example_button.colour != (179, 179, 204):
-                    example_button.colour = (179, 179, 204)
-                    example_button.draw()
-
                 if solve_button.is_over(mouse_x, mouse_y) and (solve_button.colour != (209, 209, 224)):
                     solve_button.colour = (209, 209, 224)
                     solve_button.draw()
@@ -226,10 +218,6 @@ def main():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_x = event.pos[0]
                 mouse_y = event.pos[1]
-
-                if example_button.is_over(mouse_x, mouse_y):
-                    board = get_example_board(board)
-                    print_board_gui(board)
 
                 if clear_button.is_over(mouse_x, mouse_y):
                     clear_board(board)
@@ -269,6 +257,72 @@ def main():
                         board[pos_y][pos_x] = num
 
                         print_board_console(board)
+
+        pygame.display.update()
+
+
+def main_menu():
+
+    screen.fill(background_colour)
+
+    font = pygame.font.SysFont(None, 72)
+
+    text = font.render("Sudoku Solver", True, (0, 0, 0))
+
+    screen.blit(text, ((window_width/2 - text.get_width()/2), 100))
+
+    example_button = button(300, 200, 400, 50, "Solve Example Puzzle")
+    example_button.draw()
+
+    custom_button = button(300, 300, 400, 50, "Solve Custom Puzzle")
+    custom_button.draw()
+
+    instruction_button = button(300, 400, 400, 50, "Read Instructions")
+    instruction_button.draw()
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+            if event.type == pygame.MOUSEMOTION:
+                mouse_x = event.pos[0]
+                mouse_y = event.pos[1]
+
+                if example_button.is_over(mouse_x, mouse_y) and (example_button.colour != (209, 209, 224)):
+                    example_button.colour = (209, 209, 224)
+                    example_button.draw()
+                elif (not example_button.is_over(mouse_x, mouse_y)) and example_button.colour != (179, 179, 204):
+                    example_button.colour = (179, 179, 204)
+                    example_button.draw()
+
+                if custom_button.is_over(mouse_x, mouse_y) and (custom_button.colour != (209, 209, 224)):
+                    custom_button.colour = (209, 209, 224)
+                    custom_button.draw()
+                elif (not custom_button.is_over(mouse_x, mouse_y)) and custom_button.colour != (179, 179, 204):
+                    custom_button.colour = (179, 179, 204)
+                    custom_button.draw()
+
+                if instruction_button.is_over(mouse_x, mouse_y) and (instruction_button.colour != (209, 209, 224)):
+                    instruction_button.colour = (209, 209, 224)
+                    instruction_button.draw()
+                elif (not instruction_button.is_over(mouse_x, mouse_y)) and instruction_button.colour != (179, 179, 204):
+                    instruction_button.colour = (179, 179, 204)
+                    instruction_button.draw()
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_x = event.pos[0]
+                mouse_y = event.pos[1]
+
+                if example_button.is_over(mouse_x, mouse_y):
+                    pass
+
+                if instruction_button.is_over(mouse_x, mouse_y):
+                    pass
+
+                if custom_button.is_over(mouse_x, mouse_y):
+                    custom_solve()
 
         pygame.display.update()
 
@@ -344,4 +398,4 @@ def check_square_value(board, x_pos, y_pos, value):
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    main()
+    main_menu()
