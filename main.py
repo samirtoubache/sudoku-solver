@@ -54,6 +54,25 @@ def print_board_gui(board):
             add_number_to_gui(board, i, j)
 
 
+def draw_blank_board(pos_x, pos_y, square_width):
+
+    background = pygame.Rect(pos_x, pos_y, (square_width + 1) * 9 + 1, (square_width + 1) * 9 + 1)
+    pygame.draw.rect(screen, (0, 0, 0), background)
+
+    x = pos_x + 1
+    y = pos_y + 1
+
+    for i in range(9):
+        for j in range(9):
+            square = pygame.Rect(x, y, square_width, square_width)
+            pygame.draw.rect(screen, (255, 255, 255), square)
+
+            x += square_width + 1
+
+        x = pos_x + 1
+        y += square_width + 1
+
+
 def add_number_to_gui(board, pos_x, pos_y):
     num_x = 270 + 51 * pos_x + 17
     num_y = 100 + 51 * pos_y + 10
@@ -118,9 +137,6 @@ def main():
 
     font = pygame.font.SysFont(None, 48)
 
-    x = 271
-    y = 101
-
     example_button = button(100, 25, 200, 50, "Example Puzzle")
     example_button.draw()
 
@@ -130,18 +146,7 @@ def main():
     clear_button = button(700, 25, 200, 50, "Clear Puzzle")
     clear_button.draw()
 
-    background = pygame.Rect(270, 100, 51 * 9 + 1, 51 * 9 + 1)
-    pygame.draw.rect(screen, (0, 0, 0), background)
-
-    for i in range(9):
-        for j in range(9):
-            square = pygame.Rect(x, y, 50, 50)
-            pygame.draw.rect(screen, (255, 255, 255), square)
-
-            x += 51
-
-        x = 271
-        y += 51
+    draw_blank_board(270, 100, 50)
 
     board = [
         [0, 0, 0, 0, 0, 0, 0, 0, 0],
