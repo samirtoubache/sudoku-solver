@@ -69,6 +69,19 @@ def add_number_to_gui(board, pos_x, pos_y):
         screen.blit(text, (num_x, num_y))
 
 
+def clear_board(board):
+    for i in range(0, 9):
+        for j in range(0, 9):
+
+            board[i][j] = 0
+
+            num_x = 270 + 51 * i + 17
+            num_y = 100 + 51 * j + 10
+
+            square = pygame.Rect(num_x, num_y, 30, 35)
+            pygame.draw.rect(screen, (255, 255, 255), square)
+
+
 def main():
 
     font = pygame.font.SysFont(None, 48)
@@ -78,6 +91,9 @@ def main():
 
     solve_button = button(400, 25, 200, 50, "Solve Puzzle")
     solve_button.draw()
+
+    clear_button = button(700, 25, 200, 50, "Clear Puzzle")
+    clear_button.draw()
 
     background = pygame.Rect(270, 100, 51 * 9 + 1, 51 * 9 + 1)
     pygame.draw.rect(screen, (0, 0, 0), background)
@@ -177,9 +193,19 @@ def main():
                     solve_button.colour = (179, 179, 204)
                     solve_button.draw()
 
+                if clear_button.is_over(mouse_x, mouse_y) and (clear_button.colour != (209, 209, 224)):
+                    clear_button.colour = (209, 209, 224)
+                    clear_button.draw()
+                elif (not clear_button.is_over(mouse_x, mouse_y)) and clear_button.colour != (179, 179, 204):
+                    clear_button.colour = (179, 179, 204)
+                    clear_button.draw()
+
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_x = event.pos[0]
                 mouse_y = event.pos[1]
+
+                if clear_button.is_over(mouse_x, mouse_y):
+                    clear_board(board)
 
                 if solve_button.is_over(mouse_x, mouse_y):
 
