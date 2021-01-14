@@ -15,12 +15,12 @@ screen.fill(background_colour)
 
 
 class Button:
-    def __init__(self, pos_x, pos_y, width, height, text, colour=(179, 179, 204)):
+    def __init__(self, pos_x, pos_y, width, height, text):
         self.pos_x = pos_x
         self.pos_y = pos_y
         self.width = width
         self.height = height
-        self.colour = colour
+        self.colour = (179, 179, 204)
         self.text = text
 
     def draw(self):
@@ -39,6 +39,14 @@ class Button:
 
         return False
 
+    def hover_effect(self, mouse_x, mouse_y):
+        if self.is_over(mouse_x, mouse_y) and self.colour != (209, 209, 224):
+            self.colour = (209, 209, 224)
+            self.draw()
+        elif (not self.is_over(mouse_x, mouse_y)) and self.colour != (179, 179, 204):
+            self.colour = (179, 179, 204)
+            self.draw()
+
 
 class SudokuBoard:
     def __init__(self, board, board_x, board_y, square_width=50):
@@ -48,8 +56,8 @@ class SudokuBoard:
         self.square_width = square_width
 
     def add_number_to_gui(self, pos_x, pos_y):
-        num_x = self.board_x + 51 * pos_x + 17
-        num_y = self.board_y + 51 * pos_y + 10
+        num_x = self.board_x + (self.square_width + 1) * pos_x + 17
+        num_y = self.board_y + (self.square_width + 1) * pos_y + 10
 
         square = pygame.Rect(num_x, num_y, 30, 35)
         pygame.draw.rect(screen, (255, 255, 255), square)
@@ -178,27 +186,12 @@ def custom_solve():
             if event.type == pygame.MOUSEMOTION:
                 mouse_x = event.pos[0]
                 mouse_y = event.pos[1]
+                
+                menu_button.hover_effect(mouse_x, mouse_y)
 
-                if menu_button.is_over(mouse_x, mouse_y) and (menu_button.colour != (209, 209, 224)):
-                    menu_button.colour = (209, 209, 224)
-                    menu_button.draw()
-                elif (not menu_button.is_over(mouse_x, mouse_y)) and menu_button.colour != (179, 179, 204):
-                    menu_button.colour = (179, 179, 204)
-                    menu_button.draw()
+                solve_button.hover_effect(mouse_x, mouse_y)
 
-                if solve_button.is_over(mouse_x, mouse_y) and (solve_button.colour != (209, 209, 224)):
-                    solve_button.colour = (209, 209, 224)
-                    solve_button.draw()
-                elif (not solve_button.is_over(mouse_x, mouse_y)) and solve_button.colour != (179, 179, 204):
-                    solve_button.colour = (179, 179, 204)
-                    solve_button.draw()
-
-                if clear_button.is_over(mouse_x, mouse_y) and (clear_button.colour != (209, 209, 224)):
-                    clear_button.colour = (209, 209, 224)
-                    clear_button.draw()
-                elif (not clear_button.is_over(mouse_x, mouse_y)) and clear_button.colour != (179, 179, 204):
-                    clear_button.colour = (179, 179, 204)
-                    clear_button.draw()
+                clear_button.hover_effect(mouse_x, mouse_y)
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_x = event.pos[0]
@@ -276,26 +269,11 @@ def main_menu():
                 mouse_x = event.pos[0]
                 mouse_y = event.pos[1]
 
-                if example_button.is_over(mouse_x, mouse_y) and (example_button.colour != (209, 209, 224)):
-                    example_button.colour = (209, 209, 224)
-                    example_button.draw()
-                elif (not example_button.is_over(mouse_x, mouse_y)) and example_button.colour != (179, 179, 204):
-                    example_button.colour = (179, 179, 204)
-                    example_button.draw()
+                example_button.hover_effect(mouse_x, mouse_y)
 
-                if custom_button.is_over(mouse_x, mouse_y) and (custom_button.colour != (209, 209, 224)):
-                    custom_button.colour = (209, 209, 224)
-                    custom_button.draw()
-                elif (not custom_button.is_over(mouse_x, mouse_y)) and custom_button.colour != (179, 179, 204):
-                    custom_button.colour = (179, 179, 204)
-                    custom_button.draw()
+                custom_button.hover_effect(mouse_x, mouse_y)
 
-                if instruction_button.is_over(mouse_x, mouse_y) and (instruction_button.colour != (209, 209, 224)):
-                    instruction_button.colour = (209, 209, 224)
-                    instruction_button.draw()
-                elif (not instruction_button.is_over(mouse_x, mouse_y)) and instruction_button.colour != (179, 179, 204):
-                    instruction_button.colour = (179, 179, 204)
-                    instruction_button.draw()
+                instruction_button.hover_effect(mouse_x, mouse_y)
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_x = event.pos[0]
@@ -362,47 +340,17 @@ def example_puzzle():
                 mouse_x = event.pos[0]
                 mouse_y = event.pos[1]
 
-                if menu_button.is_over(mouse_x, mouse_y) and (menu_button.colour != (209, 209, 224)):
-                    menu_button.colour = (209, 209, 224)
-                    menu_button.draw()
-                elif (not menu_button.is_over(mouse_x, mouse_y)) and menu_button.colour != (179, 179, 204):
-                    menu_button.colour = (179, 179, 204)
-                    menu_button.draw()
+                menu_button.hover_effect(mouse_x, mouse_y)
 
-                if solve_button.is_over(mouse_x, mouse_y) and (solve_button.colour != (209, 209, 224)):
-                    solve_button.colour = (209, 209, 224)
-                    solve_button.draw()
-                elif (not solve_button.is_over(mouse_x, mouse_y)) and solve_button.colour != (179, 179, 204):
-                    solve_button.colour = (179, 179, 204)
-                    solve_button.draw()
+                solve_button.hover_effect(mouse_x, mouse_y)
 
-                if easy_button.is_over(mouse_x, mouse_y) and (easy_button.colour != (209, 209, 224)):
-                    easy_button.colour = (209, 209, 224)
-                    easy_button.draw()
-                elif (not easy_button.is_over(mouse_x, mouse_y)) and easy_button.colour != (179, 179, 204):
-                    easy_button.colour = (179, 179, 204)
-                    easy_button.draw()
+                easy_button.hover_effect(mouse_x, mouse_y)
 
-                if medium_button.is_over(mouse_x, mouse_y) and (medium_button.colour != (209, 209, 224)):
-                    medium_button.colour = (209, 209, 224)
-                    medium_button.draw()
-                elif (not medium_button.is_over(mouse_x, mouse_y)) and medium_button.colour != (179, 179, 204):
-                    medium_button.colour = (179, 179, 204)
-                    medium_button.draw()
+                medium_button.hover_effect(mouse_x, mouse_y)
 
-                if hard_button.is_over(mouse_x, mouse_y) and (hard_button.colour != (209, 209, 224)):
-                    hard_button.colour = (209, 209, 224)
-                    hard_button.draw()
-                elif (not hard_button.is_over(mouse_x, mouse_y)) and hard_button.colour != (179, 179, 204):
-                    hard_button.colour = (179, 179, 204)
-                    hard_button.draw()
+                hard_button.hover_effect(mouse_x, mouse_y)
 
-                if clear_button.is_over(mouse_x, mouse_y) and (clear_button.colour != (209, 209, 224)):
-                    clear_button.colour = (209, 209, 224)
-                    clear_button.draw()
-                elif (not clear_button.is_over(mouse_x, mouse_y)) and clear_button.colour != (179, 179, 204):
-                    clear_button.colour = (179, 179, 204)
-                    clear_button.draw()
+                clear_button.hover_effect(mouse_x, mouse_y)
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_x = event.pos[0]
@@ -491,12 +439,7 @@ def instructions_screen():
                 mouse_x = event.pos[0]
                 mouse_y = event.pos[1]
 
-                if menu_button.is_over(mouse_x, mouse_y) and (menu_button.colour != (209, 209, 224)):
-                    menu_button.colour = (209, 209, 224)
-                    menu_button.draw()
-                elif (not menu_button.is_over(mouse_x, mouse_y)) and menu_button.colour != (179, 179, 204):
-                    menu_button.colour = (179, 179, 204)
-                    menu_button.draw()
+                menu_button.hover_effect(mouse_x, mouse_y)
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_x = event.pos[0]
