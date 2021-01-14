@@ -58,6 +58,7 @@ class SudokuBoard:
         self.board_x = board_x
         self.board_y = board_y
         self.square_width = square_width
+        self.board_width = ((square_width + 1) * 9) + 1
 
     def add_number_to_gui(self, pos_x, pos_y):
         # Find the x any y coordinates of the top left corner of the square
@@ -91,8 +92,7 @@ class SudokuBoard:
 
     def draw_blank_board(self):
 
-        background = pygame.Rect(self.board_x, self.board_y,
-                                 (self.square_width + 1) * 9 + 1, (self.square_width + 1) * 9 + 1)
+        background = pygame.Rect(self.board_x, self.board_y, self.board_width, self.board_width)
 
         pygame.draw.rect(screen, (0, 0, 0), background)
 
@@ -216,23 +216,29 @@ def custom_solve():
                             sudoku_puzzle.print_board_gui()
                             print("Done")
 
-                elif 270 < mouse_x < 730 and 100 < mouse_y < 560:
-                    pos_x = (mouse_x - 270) // 51
-                    pos_y = (mouse_y - 100) // 51
+                elif sudoku_puzzle.board_x < mouse_x < sudoku_puzzle.board_x + sudoku_puzzle.board_width and \
+                        sudoku_puzzle.board_y < mouse_y < sudoku_puzzle.board_y + sudoku_puzzle.board_width:
+
+                    pos_x = (mouse_x - sudoku_puzzle.board_x) // (sudoku_puzzle.square_width + 1)
+                    pos_y = (mouse_y - sudoku_puzzle.board_y) // (sudoku_puzzle.square_width + 1)
 
                     if num != -1:
 
-                        num_x = 270 + 51 * pos_x
-                        num_y = 100 + 51 * pos_y
+                        num_x = sudoku_puzzle.board_x + (sudoku_puzzle.square_width + 1) * pos_x
+                        num_y = sudoku_puzzle.board_y + (sudoku_puzzle.square_width + 1) * pos_y
 
                         if num == 0:
-                            square = pygame.Rect(num_x + 1, num_y + 1, 49, 49)
+                            square = pygame.Rect(num_x + 1, num_y + 1,
+                                                 sudoku_puzzle.square_width - 1, sudoku_puzzle.square_width - 1)
+
                             pygame.draw.rect(screen, (255, 255, 255), square)
 
                         else:
                             # If there is another number on the board, hide it first
                             if sudoku_puzzle.board[pos_y][pos_x] != 0:
-                                square = pygame.Rect(num_x + 1, num_y + 1, 49, 49)
+                                square = pygame.Rect(num_x + 1, num_y + 1,
+                                                     sudoku_puzzle.square_width - 1, sudoku_puzzle.square_width - 1)
+
                                 pygame.draw.rect(screen, (255, 255, 255), square)
 
                             num_x += 15
