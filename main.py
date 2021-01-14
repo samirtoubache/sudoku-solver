@@ -65,20 +65,22 @@ class SudokuBoard:
     # Add number in board list at given position to board gui
     def add_number_to_gui(self, pos_x, pos_y):
         # Find the x any y coordinates of the top left corner of the square
-        num_x = self.board_x + (self.square_width + 1) * pos_x
-        num_y = self.board_y + (self.square_width + 1) * pos_y
+        square_x = self.board_x + (self.square_width + 1) * pos_x
+        square_y = self.board_y + (self.square_width + 1) * pos_y
 
         # cover the previous contents of this square using a white square
-        square = pygame.Rect(num_x + 1, num_y + 1, self.square_width - 1, self.square_width - 1)
+        square = pygame.Rect(square_x + 1, square_y + 1, self.square_width - 1, self.square_width - 1)
         pygame.draw.rect(screen, (255, 255, 255), square)
 
         board_num = self.board[pos_y][pos_x]
 
-        # Adjust x and y to properly fit number in a square
-        num_x += 15
-
         if board_num != 0:
             text = number_font.render(str(board_num), True, (0, 0, 0))
+
+            # find x and y coordinate for number to appear in the middle of the square
+            num_x = square_x + (self.square_width / 2 - text.get_width() / 2)
+            num_y = square_y + (self.square_width / 2 - text.get_height() / 2)
+
             screen.blit(text, (num_x, num_y))
 
     # Add all numbers in board list to GUI
@@ -239,12 +241,12 @@ def custom_solve():
                     if num != -1:
 
                         # find x and y coordinate of the square on the screen
-                        num_x = sudoku_puzzle.board_x + (sudoku_puzzle.square_width + 1) * pos_x
-                        num_y = sudoku_puzzle.board_y + (sudoku_puzzle.square_width + 1) * pos_y
+                        square_x = sudoku_puzzle.board_x + (sudoku_puzzle.square_width + 1) * pos_x
+                        square_y = sudoku_puzzle.board_y + (sudoku_puzzle.square_width + 1) * pos_y
 
                         # num is zero, hide old number with a rectangle, removing it from the screen
                         if num == 0:
-                            square = pygame.Rect(num_x + 1, num_y + 1,
+                            square = pygame.Rect(square_x + 1, square_y + 1,
                                                  sudoku_puzzle.square_width - 1, sudoku_puzzle.square_width - 1)
 
                             pygame.draw.rect(screen, (255, 255, 255), square)
@@ -252,16 +254,16 @@ def custom_solve():
                         else:
                             # If there is another number on the board, hide it first
                             if sudoku_puzzle.board[pos_y][pos_x] != 0:
-                                square = pygame.Rect(num_x + 1, num_y + 1,
+                                square = pygame.Rect(square_x + 1, square_y + 1,
                                                      sudoku_puzzle.square_width - 1, sudoku_puzzle.square_width - 1)
 
                                 pygame.draw.rect(screen, (255, 255, 255), square)
 
-                            # offset for number to appear in the middle of the square
-                            num_x += 15
-
-                            # add new number to the clicked square
                             text = number_font.render(str(num), True, (0, 0, 0))
+
+                            # find x and y coordinate for number to appear in the middle of the square
+                            num_x = square_x + (sudoku_puzzle.square_width / 2 - text.get_width() / 2)
+                            num_y = square_y + (sudoku_puzzle.square_width / 2 - text.get_height() / 2)
 
                             screen.blit(text, (num_x, num_y))
 
@@ -278,13 +280,13 @@ def main_menu():
 
     screen.blit(text, ((window_width / 2 - text.get_width() / 2), 100))
 
-    example_button = Button(300, 200, 400, 50, "Solve Example Puzzle")
+    example_button = Button(300, 300, 400, 50, "Solve Example Puzzle")
     example_button.draw()
 
-    custom_button = Button(300, 300, 400, 50, "Solve Custom Puzzle")
+    custom_button = Button(300, 400, 400, 50, "Solve Custom Puzzle")
     custom_button.draw()
 
-    instruction_button = Button(300, 400, 400, 50, "Read Instructions")
+    instruction_button = Button(300, 500, 400, 50, "Read Instructions")
     instruction_button.draw()
 
     while True:
