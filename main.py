@@ -40,65 +40,76 @@ class Button:
         return False
 
 
-def print_board_console(board):
-    for i in range(0, 9):
-        print("| ", end="")
-        for j in range(0, 9):
-            print(str(board[i][j]) + " | ", end="")
-        print()
+class SudokuBoard:
+    def __init__(self, board, board_x, board_y, square_width=50):
+        self.board = board
+        self.board_x = board_x
+        self.board_y = board_y
+        self.square_width = square_width
 
+    def add_number_to_gui(self, pos_x, pos_y):
+        num_x = self.board_x + 51 * pos_x + 17
+        num_y = self.board_y + 51 * pos_y + 10
 
-def print_board_gui(board, board_x, board_y):
-    for i in range(0, 9):
-        for j in range(0, 9):
-            add_number_to_gui(board, i, j, board_x, board_y)
+        square = pygame.Rect(num_x, num_y, 30, 35)
+        pygame.draw.rect(screen, (255, 255, 255), square)
 
+        board_num = self.board[pos_y][pos_x]
 
-def draw_blank_board(pos_x, pos_y, square_width):
+        if board_num != 0:
+            font = pygame.font.SysFont(None, 48)
+            text = font.render(str(board_num), True, (0, 0, 0))
+            screen.blit(text, (num_x, num_y))
 
-    background = pygame.Rect(pos_x, pos_y, (square_width + 1) * 9 + 1, (square_width + 1) * 9 + 1)
-    pygame.draw.rect(screen, (0, 0, 0), background)
+    def print_board_gui(self):
+        for i in range(0, 9):
+            for j in range(0, 9):
+                self.add_number_to_gui(i, j)
 
-    x = pos_x + 1
-    y = pos_y + 1
+    def print_board_console(self):
+        for i in range(0, 9):
+            print("| ", end="")
+            for j in range(0, 9):
+                print(str(self.board[i][j]) + " | ", end="")
+            print()
 
-    for i in range(9):
-        for j in range(9):
-            square = pygame.Rect(x, y, square_width, square_width)
-            pygame.draw.rect(screen, (255, 255, 255), square)
+    def draw_blank_board(self):
 
-            x += square_width + 1
+        background = pygame.Rect(self.board_x, self.board_y, (self.square_width + 1) * 9 + 1, (self.square_width + 1) * 9 + 1)
+        pygame.draw.rect(screen, (0, 0, 0), background)
 
-        x = pos_x + 1
-        y += square_width + 1
+        x = self.board_x + 1
+        y = self.board_y + 1
 
+        for i in range(9):
+            for j in range(9):
+                square = pygame.Rect(x, y, self.square_width, self.square_width)
+                pygame.draw.rect(screen, (255, 255, 255), square)
 
-def add_number_to_gui(board, pos_x, pos_y, board_x, board_y):
-    num_x = board_x + 51 * pos_x + 17
-    num_y = board_y + 51 * pos_y + 10
+                x += self.square_width + 1
 
-    square = pygame.Rect(num_x, num_y, 30, 35)
-    pygame.draw.rect(screen, (255, 255, 255), square)
+            x = self.board_x + 1
+            y += self.square_width + 1
 
-    board_num = board[pos_y][pos_x]
+    def clear_board(self):
+        for i in range(0, 9):
+            for j in range(0, 9):
 
-    if board_num != 0:
-        font = pygame.font.SysFont(None, 48)
-        text = font.render(str(board_num), True, (0, 0, 0))
-        screen.blit(text, (num_x, num_y))
+                self.board[i][j] = 0
 
+                num_x = self.board_x + (self.square_width + 1) * i + 17
+                num_y = self.board_y + (self.square_width + 1) * j + 10
 
-def clear_board(board, board_x, board_y):
-    for i in range(0, 9):
-        for j in range(0, 9):
+                square = pygame.Rect(num_x, num_y, 30, 35)
+                pygame.draw.rect(screen, (255, 255, 255), square)
 
-            board[i][j] = 0
+    def check_board_complete(self):
+        for i in range(0, 9):
+            for j in range(0, 9):
+                if self.board[i][j] == 0:
+                    return False
 
-            num_x = board_x + 51 * i + 17
-            num_y = board_y + 51 * j + 10
-
-            square = pygame.Rect(num_x, num_y, 30, 35)
-            pygame.draw.rect(screen, (255, 255, 255), square)
+        return True
 
 
 def custom_solve():
@@ -116,8 +127,6 @@ def custom_solve():
     clear_button = Button(550, 25, 200, 50, "Clear Puzzle")
     clear_button.draw()
 
-    draw_blank_board(270, 100, 50)
-
     board = [
         [0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -130,7 +139,10 @@ def custom_solve():
         [0, 0, 0, 0, 0, 0, 0, 0, 0]
     ]
 
-    print_board_gui(board, 270, 100)
+    sudoku_puzzle = SudokuBoard(board, 270, 100, 50)
+
+    sudoku_puzzle.draw_blank_board()
+    sudoku_puzzle.print_board_gui()
 
     num = -1
 
@@ -141,11 +153,6 @@ def custom_solve():
                 sys.exit()
 
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
-                    while not check_board_complete(board):
-                        if check_square(board, 0, 0):
-                            print_board_console(board)
-                            print()
 
                 if event.key == pygame.K_0:
                     num = 0
@@ -201,13 +208,13 @@ def custom_solve():
                     main_menu()
 
                 if clear_button.is_over(mouse_x, mouse_y):
-                    clear_board(board, 270, 100)
+                    sudoku_puzzle.clear_board()
 
                 if solve_button.is_over(mouse_x, mouse_y):
 
-                    while not check_board_complete(board):
-                        if check_square(board, 0, 0):
-                            print_board_gui(board, 270, 100)
+                    while not sudoku_puzzle.check_board_complete():
+                        if check_square(sudoku_puzzle, 0, 0):
+                            sudoku_puzzle.print_board_gui()
                             print("Done")
 
                 elif 270 < mouse_x < 730 and 100 < mouse_y < 560:
@@ -227,7 +234,7 @@ def custom_solve():
 
                         else:
                             # If there is another number on the board, hide it first
-                            if board[pos_y][pos_x] != 0:
+                            if sudoku_puzzle.board[pos_y][pos_x] != 0:
                                 square = pygame.Rect(num_x, num_y, 30, 35)
                                 pygame.draw.rect(screen, (255, 255, 255), square)
 
@@ -235,9 +242,7 @@ def custom_solve():
 
                             screen.blit(text, (num_x, num_y))
 
-                        board[pos_y][pos_x] = num
-
-                        print_board_console(board)
+                        sudoku_puzzle.board[pos_y][pos_x] = num
 
         pygame.display.update()
 
@@ -330,8 +335,6 @@ def example_puzzle():
     hard_button = Button(650, 100, 200, 50, "Hard Puzzle")
     hard_button.draw()
 
-    draw_blank_board(270, 200, 50)
-
     board = [
         [0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -344,7 +347,10 @@ def example_puzzle():
         [0, 0, 0, 0, 0, 0, 0, 0, 0]
     ]
 
-    print_board_gui(board, 270, 200)
+    sudoku_puzzle = SudokuBoard(board, 270, 200, 50)
+
+    sudoku_puzzle.draw_blank_board()
+    sudoku_puzzle.print_board_gui()
 
     while True:
         for event in pygame.event.get():
@@ -406,26 +412,26 @@ def example_puzzle():
                     main_menu()
 
                 if clear_button.is_over(mouse_x, mouse_y):
-                    clear_board(board, 270, 200)
+                    sudoku_puzzle.clear_board()
 
                 if solve_button.is_over(mouse_x, mouse_y):
 
-                    while not check_board_complete(board):
-                        if check_square(board, 0, 0):
-                            print_board_gui(board, 270, 200)
+                    while not sudoku_puzzle.check_board_complete():
+                        if check_square(sudoku_puzzle, 0, 0):
+                            sudoku_puzzle.print_board_gui()
                             print("Done")
 
                 if easy_button.is_over(mouse_x, mouse_y):
-                    board = sample_puzzle("easy")
-                    print_board_gui(board, 270, 200)
+                    sudoku_puzzle.board = sample_puzzle("easy")
+                    sudoku_puzzle.print_board_gui()
 
                 if medium_button.is_over(mouse_x, mouse_y):
-                    board = sample_puzzle("medium")
-                    print_board_gui(board, 270, 200)
+                    sudoku_puzzle.board = sample_puzzle("medium")
+                    sudoku_puzzle.print_board_gui()
 
                 if hard_button.is_over(mouse_x, mouse_y):
-                    board = sample_puzzle("hard")
-                    print_board_gui(board, 270, 200)
+                    sudoku_puzzle.board = sample_puzzle("hard")
+                    sudoku_puzzle.print_board_gui()
 
         pygame.display.update()
 
@@ -544,16 +550,7 @@ def sample_puzzle(difficulty):
         ]
 
 
-def check_board_complete(board):
-    for i in range(0, 9):
-        for j in range(0, 9):
-            if board[i][j] == 0:
-                return False
-
-    return True
-
-
-def check_square(board, x_pos, y_pos):
+def check_square(sudoku_puzzle, x_pos, y_pos):
 
     if y_pos >= 9:
         y_pos = 0
@@ -566,17 +563,17 @@ def check_square(board, x_pos, y_pos):
         return True
 
     # default number in the puzzle
-    elif board[x_pos][y_pos] != 0:
-        return check_square(board, x_pos, y_pos + 1)
+    elif sudoku_puzzle.board[x_pos][y_pos] != 0:
+        return check_square(sudoku_puzzle, x_pos, y_pos + 1)
 
     # blank space
     else:
         for i in range(1, 10):
 
             # if i is a valid value for this location
-            if check_square_value(board, x_pos, y_pos, i):
-                board[x_pos][y_pos] = i
-                status = check_square(board, x_pos, y_pos + 1)
+            if check_square_value(sudoku_puzzle, x_pos, y_pos, i):
+                sudoku_puzzle.board[x_pos][y_pos] = i
+                status = check_square(sudoku_puzzle, x_pos, y_pos + 1)
 
                 if not status:
                     continue
@@ -585,20 +582,20 @@ def check_square(board, x_pos, y_pos):
 
     # If this point is reached, they are no correct values for this position, meaning a previous value is incorrect
     # set this square to the blank value and return False indicating a previous square must be changed
-    board[x_pos][y_pos] = 0
+    sudoku_puzzle.board[x_pos][y_pos] = 0
     return False
 
 
-def check_square_value(board, x_pos, y_pos, value):
+def check_square_value(sudoku_puzzle, x_pos, y_pos, value):
 
     # check row
     for y in range(0, 9):
-        if board[x_pos][y] == value:
+        if sudoku_puzzle.board[x_pos][y] == value:
             return False
 
     # check column
     for x in range(0, 9):
-        if board[x][y_pos] == value:
+        if sudoku_puzzle.board[x][y_pos] == value:
             return False
 
     x_start = (x_pos // 3) * 3
@@ -607,7 +604,7 @@ def check_square_value(board, x_pos, y_pos, value):
     # check 3 x 3 square
     for i in range(x_start, x_start + 3):
         for j in range(y_start, y_start + 3):
-            if board[i][j] == value:
+            if sudoku_puzzle.board[i][j] == value:
                 return False
 
     return True
