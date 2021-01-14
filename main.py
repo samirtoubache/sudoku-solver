@@ -19,6 +19,7 @@ normal_font = pygame.font.Font('times-new-roman.ttf', 30)
 small_font = pygame.font.Font('times-new-roman.ttf', 24)
 
 
+# Class to control the behaviour and appearance of buttons used in the GUI
 class Button:
     def __init__(self, pos_x, pos_y, width, height, text):
         self.pos_x = pos_x
@@ -52,6 +53,7 @@ class Button:
             self.draw()
 
 
+# Class to control the behaviour and appearance of sudoku board used in the GUI
 class SudokuBoard:
     def __init__(self, board, board_x, board_y, square_width=50):
         self.board = board
@@ -60,6 +62,7 @@ class SudokuBoard:
         self.square_width = square_width
         self.board_width = ((square_width + 1) * 9) + 1
 
+    # Add number in board list at given position to board gui
     def add_number_to_gui(self, pos_x, pos_y):
         # Find the x any y coordinates of the top left corner of the square
         num_x = self.board_x + (self.square_width + 1) * pos_x
@@ -78,11 +81,13 @@ class SudokuBoard:
             text = number_font.render(str(board_num), True, (0, 0, 0))
             screen.blit(text, (num_x, num_y))
 
+    # Add all numbers in board list to GUI
     def print_board_gui(self):
         for i in range(0, 9):
             for j in range(0, 9):
                 self.add_number_to_gui(i, j)
 
+    # Print board list to console
     def print_board_console(self):
         for i in range(0, 9):
             print("| ", end="")
@@ -90,6 +95,7 @@ class SudokuBoard:
                 print(str(self.board[i][j]) + " | ", end="")
             print()
 
+    # Draw a blank board GUI
     def draw_blank_board(self):
 
         background = pygame.Rect(self.board_x, self.board_y, self.board_width, self.board_width)
@@ -109,6 +115,7 @@ class SudokuBoard:
             x = self.board_x + 1
             y += self.square_width + 1
 
+    # Set all elements in board list to zero and clear all numbers from GUI board
     def clear_board(self):
         for i in range(0, 9):
             for j in range(0, 9):
@@ -120,6 +127,7 @@ class SudokuBoard:
                 square = pygame.Rect(num_x + 1, num_y + 1, self.square_width - 1, self.square_width - 1)
                 pygame.draw.rect(screen, (255, 255, 255), square)
 
+    # Check if board list has any unfilled numbers
     def check_board_complete(self):
         for i in range(0, 9):
             for j in range(0, 9):
@@ -129,6 +137,7 @@ class SudokuBoard:
         return True
 
 
+# Clears old screen then sets appearance and controls behaviour of custom page
 def custom_solve():
     screen.fill(background_colour)
 
@@ -166,6 +175,7 @@ def custom_solve():
                 pygame.quit()
                 sys.exit()
 
+            # set num variable to the number key pressed
             if event.type == pygame.KEYDOWN:
 
                 if event.key == pygame.K_0:
@@ -189,6 +199,7 @@ def custom_solve():
                 elif event.key == pygame.K_9:
                     num = 9
 
+            # creates hover effect if mouse is over a button
             if event.type == pygame.MOUSEMOTION:
                 mouse_x = event.pos[0]
                 mouse_y = event.pos[1]
@@ -216,17 +227,22 @@ def custom_solve():
                             sudoku_puzzle.print_board_gui()
                             print("Done")
 
+                # if mouse is somewhere on the sudoku board
                 elif sudoku_puzzle.board_x < mouse_x < sudoku_puzzle.board_x + sudoku_puzzle.board_width and \
                         sudoku_puzzle.board_y < mouse_y < sudoku_puzzle.board_y + sudoku_puzzle.board_width:
 
+                    # calculate the x and y position of the square on the board that was clicked
                     pos_x = (mouse_x - sudoku_puzzle.board_x) // (sudoku_puzzle.square_width + 1)
                     pos_y = (mouse_y - sudoku_puzzle.board_y) // (sudoku_puzzle.square_width + 1)
 
+                    # if a number was previously pressed
                     if num != -1:
 
+                        # find x and y coordinate of the square on the screen
                         num_x = sudoku_puzzle.board_x + (sudoku_puzzle.square_width + 1) * pos_x
                         num_y = sudoku_puzzle.board_y + (sudoku_puzzle.square_width + 1) * pos_y
 
+                        # num is zero, hide old number with a rectangle, removing it from the screen
                         if num == 0:
                             square = pygame.Rect(num_x + 1, num_y + 1,
                                                  sudoku_puzzle.square_width - 1, sudoku_puzzle.square_width - 1)
@@ -241,8 +257,10 @@ def custom_solve():
 
                                 pygame.draw.rect(screen, (255, 255, 255), square)
 
+                            # offset for number to appear in the middle of the square
                             num_x += 15
 
+                            # add new number to the clicked square
                             text = number_font.render(str(num), True, (0, 0, 0))
 
                             screen.blit(text, (num_x, num_y))
@@ -252,6 +270,7 @@ def custom_solve():
         pygame.display.update()
 
 
+# Clears old screen then sets appearance and controls behaviour of main menu page
 def main_menu():
     screen.fill(background_colour)
 
@@ -274,6 +293,7 @@ def main_menu():
                 pygame.quit()
                 sys.exit()
 
+            # creates hover effect if mouse is over a button
             if event.type == pygame.MOUSEMOTION:
                 mouse_x = event.pos[0]
                 mouse_y = event.pos[1]
@@ -300,6 +320,7 @@ def main_menu():
         pygame.display.update()
 
 
+# Clears old screen then sets appearance and controls behaviour of example puzzle page
 def example_puzzle():
     screen.fill(background_colour)
 
@@ -344,6 +365,7 @@ def example_puzzle():
                 pygame.quit()
                 sys.exit()
 
+            # creates hover effect if mouse is over a button
             if event.type == pygame.MOUSEMOTION:
                 mouse_x = event.pos[0]
                 mouse_y = event.pos[1]
@@ -392,6 +414,7 @@ def example_puzzle():
         pygame.display.update()
 
 
+# Clears old screen then add the instruction text in the instructions page
 def instructions_screen():
     screen.fill(background_colour)
 
@@ -439,6 +462,7 @@ def instructions_screen():
                 pygame.quit()
                 sys.exit()
 
+            # creates hover effect if mouse is over a button
             if event.type == pygame.MOUSEMOTION:
                 mouse_x = event.pos[0]
                 mouse_y = event.pos[1]
@@ -455,6 +479,7 @@ def instructions_screen():
         pygame.display.update()
 
 
+# Returns sample puzzle based on the selected difficulty
 def sample_puzzle(difficulty):
     if difficulty == "easy":
         return [
@@ -497,6 +522,11 @@ def sample_puzzle(difficulty):
         ]
 
 
+# looks for valid number for square at given x and y position
+# sets board variable at the given position to valid number if a valid number is found
+# then recursively calls itself with next x and y position
+# tries another valid number if recursive function returns false
+# returns false in no valid number is found
 def check_square(sudoku_puzzle, x_pos, y_pos):
     if y_pos >= 9:
         y_pos = 0
@@ -532,6 +562,7 @@ def check_square(sudoku_puzzle, x_pos, y_pos):
     return False
 
 
+# checks if given value is valid in the given x and y position according to rules of sudoku
 def check_square_value(sudoku_puzzle, x_pos, y_pos, value):
     # check row
     for y in range(0, 9):
