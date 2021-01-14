@@ -4,7 +4,7 @@ import sys
 pygame.init()
 
 window_width = 1000
-window_height = 600
+window_height = 750
 
 screen = pygame.display.set_mode((window_width, window_height))
 background_colour = (255, 255, 255)
@@ -14,7 +14,7 @@ pygame.display.set_caption("Pygame test")
 screen.fill(background_colour)
 
 
-class button:
+class Button:
     def __init__(self, pos_x, pos_y, width, height, text, colour=(179, 179, 204)):
         self.pos_x = pos_x
         self.pos_y = pos_y
@@ -48,15 +48,34 @@ def print_board_console(board):
         print()
 
 
-def print_board_gui(board):
+def print_board_gui(board, board_x, board_y):
     for i in range(0, 9):
         for j in range(0, 9):
-            add_number_to_gui(board, i, j)
+            add_number_to_gui(board, i, j, board_x, board_y)
 
 
-def add_number_to_gui(board, pos_x, pos_y):
-    num_x = 270 + 51 * pos_x + 17
-    num_y = 100 + 51 * pos_y + 10
+def draw_blank_board(pos_x, pos_y, square_width):
+
+    background = pygame.Rect(pos_x, pos_y, (square_width + 1) * 9 + 1, (square_width + 1) * 9 + 1)
+    pygame.draw.rect(screen, (0, 0, 0), background)
+
+    x = pos_x + 1
+    y = pos_y + 1
+
+    for i in range(9):
+        for j in range(9):
+            square = pygame.Rect(x, y, square_width, square_width)
+            pygame.draw.rect(screen, (255, 255, 255), square)
+
+            x += square_width + 1
+
+        x = pos_x + 1
+        y += square_width + 1
+
+
+def add_number_to_gui(board, pos_x, pos_y, board_x, board_y):
+    num_x = board_x + 51 * pos_x + 17
+    num_y = board_y + 51 * pos_y + 10
 
     square = pygame.Rect(num_x, num_y, 30, 35)
     pygame.draw.rect(screen, (255, 255, 255), square)
@@ -69,79 +88,35 @@ def add_number_to_gui(board, pos_x, pos_y):
         screen.blit(text, (num_x, num_y))
 
 
-def clear_board(board):
+def clear_board(board, board_x, board_y):
     for i in range(0, 9):
         for j in range(0, 9):
 
             board[i][j] = 0
 
-            num_x = 270 + 51 * i + 17
-            num_y = 100 + 51 * j + 10
+            num_x = board_x + 51 * i + 17
+            num_y = board_y + 51 * j + 10
 
             square = pygame.Rect(num_x, num_y, 30, 35)
             pygame.draw.rect(screen, (255, 255, 255), square)
 
 
-def get_example_board(board):
+def custom_solve():
 
-    board1 = [
-        [0, 3, 7, 8, 0, 0, 2, 9, 1],
-        [0, 0, 1, 7, 0, 6, 0, 3, 0],
-        [5, 9, 4, 0, 2, 0, 0, 0, 0],
-        [0, 0, 0, 9, 0, 0, 8, 7, 5],
-        [2, 0, 0, 0, 6, 7, 0, 1, 0],
-        [0, 0, 0, 0, 4, 8, 9, 0, 0],
-        [3, 6, 5, 2, 0, 0, 0, 0, 0],
-        [9, 0, 0, 0, 1, 3, 6, 0, 2],
-        [0, 1, 0, 6, 0, 0, 3, 0, 9]
-    ]
-
-    board2 = [
-        [0, 0, 0, 7, 0, 0, 0, 0, 4],
-        [6, 0, 0, 0, 0, 0, 8, 0, 0],
-        [0, 4, 0, 5, 0, 1, 0, 0, 0],
-        [0, 0, 0, 1, 0, 0, 0, 0, 0],
-        [7, 0, 6, 0, 5, 0, 9, 0, 0],
-        [0, 0, 3, 0, 0, 8, 2, 0, 0],
-        [0, 0, 0, 2, 0, 0, 0, 0, 0],
-        [0, 0, 8, 0, 0, 4, 0, 9, 3],
-        [0, 1, 0, 0, 7, 0, 5, 0, 0]
-    ]
-
-    if board != board1:
-        return board1
-    elif board != board2:
-        return board2
-
-
-def main():
+    screen.fill(background_colour)
 
     font = pygame.font.SysFont(None, 48)
 
-    x = 271
-    y = 101
+    menu_button = Button(5, 5, 75, 50, "Menu")
+    menu_button.draw()
 
-    example_button = button(100, 25, 200, 50, "Example Puzzle")
-    example_button.draw()
-
-    solve_button = button(400, 25, 200, 50, "Solve Puzzle")
+    solve_button = Button(250, 25, 200, 50, "Solve Puzzle")
     solve_button.draw()
 
-    clear_button = button(700, 25, 200, 50, "Clear Puzzle")
+    clear_button = Button(550, 25, 200, 50, "Clear Puzzle")
     clear_button.draw()
 
-    background = pygame.Rect(270, 100, 51 * 9 + 1, 51 * 9 + 1)
-    pygame.draw.rect(screen, (0, 0, 0), background)
-
-    for i in range(9):
-        for j in range(9):
-            square = pygame.Rect(x, y, 50, 50)
-            pygame.draw.rect(screen, (255, 255, 255), square)
-
-            x += 51
-
-        x = 271
-        y += 51
+    draw_blank_board(270, 100, 50)
 
     board = [
         [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -155,7 +130,7 @@ def main():
         [0, 0, 0, 0, 0, 0, 0, 0, 0]
     ]
 
-    print_board_gui(board)
+    print_board_gui(board, 270, 100)
 
     num = -1
 
@@ -197,12 +172,12 @@ def main():
                 mouse_x = event.pos[0]
                 mouse_y = event.pos[1]
 
-                if example_button.is_over(mouse_x, mouse_y) and (example_button.colour != (209, 209, 224)):
-                    example_button.colour = (209, 209, 224)
-                    example_button.draw()
-                elif (not example_button.is_over(mouse_x, mouse_y)) and example_button.colour != (179, 179, 204):
-                    example_button.colour = (179, 179, 204)
-                    example_button.draw()
+                if menu_button.is_over(mouse_x, mouse_y) and (menu_button.colour != (209, 209, 224)):
+                    menu_button.colour = (209, 209, 224)
+                    menu_button.draw()
+                elif (not menu_button.is_over(mouse_x, mouse_y)) and menu_button.colour != (179, 179, 204):
+                    menu_button.colour = (179, 179, 204)
+                    menu_button.draw()
 
                 if solve_button.is_over(mouse_x, mouse_y) and (solve_button.colour != (209, 209, 224)):
                     solve_button.colour = (209, 209, 224)
@@ -222,18 +197,17 @@ def main():
                 mouse_x = event.pos[0]
                 mouse_y = event.pos[1]
 
-                if example_button.is_over(mouse_x, mouse_y):
-                    board = get_example_board(board)
-                    print_board_gui(board)
+                if menu_button.is_over(mouse_x, mouse_y):
+                    main_menu()
 
                 if clear_button.is_over(mouse_x, mouse_y):
-                    clear_board(board)
+                    clear_board(board, 270, 100)
 
                 if solve_button.is_over(mouse_x, mouse_y):
 
                     while not check_board_complete(board):
                         if check_square(board, 0, 0):
-                            print_board_gui(board)
+                            print_board_gui(board, 270, 100)
                             print("Done")
 
                 elif 270 < mouse_x < 730 and 100 < mouse_y < 560:
@@ -266,6 +240,308 @@ def main():
                         print_board_console(board)
 
         pygame.display.update()
+
+
+def main_menu():
+
+    screen.fill(background_colour)
+
+    font = pygame.font.SysFont(None, 72)
+
+    text = font.render("Sudoku Solver", True, (0, 0, 0))
+
+    screen.blit(text, ((window_width/2 - text.get_width()/2), 100))
+
+    example_button = Button(300, 200, 400, 50, "Solve Example Puzzle")
+    example_button.draw()
+
+    custom_button = Button(300, 300, 400, 50, "Solve Custom Puzzle")
+    custom_button.draw()
+
+    instruction_button = Button(300, 400, 400, 50, "Read Instructions")
+    instruction_button.draw()
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+            if event.type == pygame.MOUSEMOTION:
+                mouse_x = event.pos[0]
+                mouse_y = event.pos[1]
+
+                if example_button.is_over(mouse_x, mouse_y) and (example_button.colour != (209, 209, 224)):
+                    example_button.colour = (209, 209, 224)
+                    example_button.draw()
+                elif (not example_button.is_over(mouse_x, mouse_y)) and example_button.colour != (179, 179, 204):
+                    example_button.colour = (179, 179, 204)
+                    example_button.draw()
+
+                if custom_button.is_over(mouse_x, mouse_y) and (custom_button.colour != (209, 209, 224)):
+                    custom_button.colour = (209, 209, 224)
+                    custom_button.draw()
+                elif (not custom_button.is_over(mouse_x, mouse_y)) and custom_button.colour != (179, 179, 204):
+                    custom_button.colour = (179, 179, 204)
+                    custom_button.draw()
+
+                if instruction_button.is_over(mouse_x, mouse_y) and (instruction_button.colour != (209, 209, 224)):
+                    instruction_button.colour = (209, 209, 224)
+                    instruction_button.draw()
+                elif (not instruction_button.is_over(mouse_x, mouse_y)) and instruction_button.colour != (179, 179, 204):
+                    instruction_button.colour = (179, 179, 204)
+                    instruction_button.draw()
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_x = event.pos[0]
+                mouse_y = event.pos[1]
+
+                if example_button.is_over(mouse_x, mouse_y):
+                    example_puzzle()
+
+                if instruction_button.is_over(mouse_x, mouse_y):
+                    instructions_screen()
+
+                if custom_button.is_over(mouse_x, mouse_y):
+                    custom_solve()
+
+        pygame.display.update()
+
+
+def example_puzzle():
+
+    screen.fill(background_colour)
+
+    menu_button = Button(5, 5, 75, 50, "Menu")
+    menu_button.draw()
+
+    solve_button = Button(250, 25, 200, 50, "Solve Puzzle")
+    solve_button.draw()
+
+    clear_button = Button(550, 25, 200, 50, "Clear Puzzle")
+    clear_button.draw()
+
+    easy_button = Button(150, 100, 200, 50, "Easy Puzzle")
+    easy_button.draw()
+
+    medium_button = Button(400, 100, 200, 50, "Medium Puzzle")
+    medium_button.draw()
+
+    hard_button = Button(650, 100, 200, 50, "Hard Puzzle")
+    hard_button.draw()
+
+    draw_blank_board(270, 200, 50)
+
+    board = [
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0]
+    ]
+
+    print_board_gui(board, 270, 200)
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+            if event.type == pygame.MOUSEMOTION:
+                mouse_x = event.pos[0]
+                mouse_y = event.pos[1]
+
+                if menu_button.is_over(mouse_x, mouse_y) and (menu_button.colour != (209, 209, 224)):
+                    menu_button.colour = (209, 209, 224)
+                    menu_button.draw()
+                elif (not menu_button.is_over(mouse_x, mouse_y)) and menu_button.colour != (179, 179, 204):
+                    menu_button.colour = (179, 179, 204)
+                    menu_button.draw()
+
+                if solve_button.is_over(mouse_x, mouse_y) and (solve_button.colour != (209, 209, 224)):
+                    solve_button.colour = (209, 209, 224)
+                    solve_button.draw()
+                elif (not solve_button.is_over(mouse_x, mouse_y)) and solve_button.colour != (179, 179, 204):
+                    solve_button.colour = (179, 179, 204)
+                    solve_button.draw()
+
+                if easy_button.is_over(mouse_x, mouse_y) and (easy_button.colour != (209, 209, 224)):
+                    easy_button.colour = (209, 209, 224)
+                    easy_button.draw()
+                elif (not easy_button.is_over(mouse_x, mouse_y)) and easy_button.colour != (179, 179, 204):
+                    easy_button.colour = (179, 179, 204)
+                    easy_button.draw()
+
+                if medium_button.is_over(mouse_x, mouse_y) and (medium_button.colour != (209, 209, 224)):
+                    medium_button.colour = (209, 209, 224)
+                    medium_button.draw()
+                elif (not medium_button.is_over(mouse_x, mouse_y)) and medium_button.colour != (179, 179, 204):
+                    medium_button.colour = (179, 179, 204)
+                    medium_button.draw()
+
+                if hard_button.is_over(mouse_x, mouse_y) and (hard_button.colour != (209, 209, 224)):
+                    hard_button.colour = (209, 209, 224)
+                    hard_button.draw()
+                elif (not hard_button.is_over(mouse_x, mouse_y)) and hard_button.colour != (179, 179, 204):
+                    hard_button.colour = (179, 179, 204)
+                    hard_button.draw()
+
+                if clear_button.is_over(mouse_x, mouse_y) and (clear_button.colour != (209, 209, 224)):
+                    clear_button.colour = (209, 209, 224)
+                    clear_button.draw()
+                elif (not clear_button.is_over(mouse_x, mouse_y)) and clear_button.colour != (179, 179, 204):
+                    clear_button.colour = (179, 179, 204)
+                    clear_button.draw()
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_x = event.pos[0]
+                mouse_y = event.pos[1]
+
+                if menu_button.is_over(mouse_x, mouse_y):
+                    main_menu()
+
+                if clear_button.is_over(mouse_x, mouse_y):
+                    clear_board(board, 270, 200)
+
+                if solve_button.is_over(mouse_x, mouse_y):
+
+                    while not check_board_complete(board):
+                        if check_square(board, 0, 0):
+                            print_board_gui(board, 270, 200)
+                            print("Done")
+
+                if easy_button.is_over(mouse_x, mouse_y):
+                    board = sample_puzzle("easy")
+                    print_board_gui(board, 270, 200)
+
+                if medium_button.is_over(mouse_x, mouse_y):
+                    board = sample_puzzle("medium")
+                    print_board_gui(board, 270, 200)
+
+                if hard_button.is_over(mouse_x, mouse_y):
+                    board = sample_puzzle("hard")
+                    print_board_gui(board, 270, 200)
+
+        pygame.display.update()
+
+
+def instructions_screen():
+
+    screen.fill(background_colour)
+
+    menu_button = Button(5, 5, 75, 50, "Menu")
+    menu_button.draw()
+
+    large_font = pygame.font.SysFont(None, 72)
+    text = large_font.render("Application Instructions", True, (0, 0, 0))
+    screen.blit(text, ((window_width/2 - text.get_width()/2), 100))
+
+    normal_font = pygame.font.SysFont(None, 24)
+
+    text = normal_font.render("Thanks for using my application, here is some information on how to use this program.",
+                              True, (0, 0, 0))
+    screen.blit(text, (100, 250))
+
+    text = normal_font.render("There are two modes of the program, example puzzle mode and custom mode.",
+                              True, (0, 0, 0))
+    screen.blit(text, (100, 275))
+
+    text = normal_font.render("The example puzzle mode lets you choose a saved easy, medium or hard puzzle to solve.",
+                              True, (0, 0, 0))
+    screen.blit(text, (100, 350))
+
+    text = normal_font.render("The custom puzzle mode starts with a blank board where you can add your own numbers",
+                              True, (0, 0, 0))
+    screen.blit(text, (100, 400))
+
+    text = normal_font.render("by pressing a number key and clicking on the square you want to add the number to,",
+                              True, (0, 0, 0))
+    screen.blit(text, (100, 425))
+
+    text = normal_font.render("you would then be able to solve the puzzle you entered with the solve button.",
+                              True, (0, 0, 0))
+    screen.blit(text, (100, 450))
+
+    text = normal_font.render("This program should be able to solve any sudoku puzzle, but note that more complex",
+                              True, (0, 0, 0))
+    screen.blit(text, (100, 500))
+
+    text = normal_font.render("puzzles may take 10-15 seconds to solve.",
+                              True, (0, 0, 0))
+    screen.blit(text, (100, 525))
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+            if event.type == pygame.MOUSEMOTION:
+                mouse_x = event.pos[0]
+                mouse_y = event.pos[1]
+
+                if menu_button.is_over(mouse_x, mouse_y) and (menu_button.colour != (209, 209, 224)):
+                    menu_button.colour = (209, 209, 224)
+                    menu_button.draw()
+                elif (not menu_button.is_over(mouse_x, mouse_y)) and menu_button.colour != (179, 179, 204):
+                    menu_button.colour = (179, 179, 204)
+                    menu_button.draw()
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_x = event.pos[0]
+                mouse_y = event.pos[1]
+
+                if menu_button.is_over(mouse_x, mouse_y):
+                    main_menu()
+
+        pygame.display.update()
+
+
+def sample_puzzle(difficulty):
+    if difficulty == "easy":
+        return [
+            [0, 3, 7, 8, 0, 0, 2, 9, 1],
+            [0, 0, 1, 7, 0, 6, 0, 3, 0],
+            [5, 9, 4, 0, 2, 0, 0, 0, 0],
+            [0, 0, 0, 9, 0, 0, 8, 7, 5],
+            [2, 0, 0, 0, 6, 7, 0, 1, 0],
+            [0, 0, 0, 0, 4, 8, 9, 0, 0],
+            [3, 6, 5, 2, 0, 0, 0, 0, 0],
+            [9, 0, 0, 0, 1, 3, 6, 0, 2],
+            [0, 1, 0, 6, 0, 0, 3, 0, 9]
+        ]
+
+    elif difficulty == "medium":
+        return [
+            [0, 0, 1, 0, 0, 2, 0, 0, 0],
+            [0, 0, 0, 8, 4, 0, 0, 5, 0],
+            [0, 8, 0, 0, 0, 0, 0, 1, 0],
+            [0, 6, 0, 0, 0, 8, 0, 0, 0],
+            [0, 0, 7, 6, 0, 0, 3, 0, 0],
+            [0, 1, 0, 9, 0, 0, 0, 0, 7],
+            [0, 2, 5, 0, 0, 0, 0, 8, 0],
+            [7, 0, 0, 0, 0, 4, 2, 0, 0],
+            [0, 0, 0, 0, 3, 0, 0, 0, 0]
+        ]
+
+    elif difficulty == "hard":
+
+        return [
+            [0, 0, 0, 7, 0, 0, 0, 0, 4],
+            [6, 0, 0, 0, 0, 0, 8, 0, 0],
+            [0, 4, 0, 5, 0, 1, 0, 0, 0],
+            [0, 0, 0, 1, 0, 0, 0, 0, 0],
+            [7, 0, 6, 0, 5, 0, 9, 0, 0],
+            [0, 0, 3, 0, 0, 8, 2, 0, 0],
+            [0, 0, 0, 2, 0, 0, 0, 0, 0],
+            [0, 0, 8, 0, 0, 4, 0, 9, 3],
+            [0, 1, 0, 0, 7, 0, 5, 0, 0]
+        ]
 
 
 def check_board_complete(board):
@@ -339,4 +615,4 @@ def check_square_value(board, x_pos, y_pos, value):
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    main()
+    main_menu()
