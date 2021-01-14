@@ -107,6 +107,9 @@ def custom_solve():
 
     font = pygame.font.SysFont(None, 48)
 
+    menu_button = Button(5, 5, 75, 50, "Menu")
+    menu_button.draw()
+
     solve_button = Button(250, 25, 200, 50, "Solve Puzzle")
     solve_button.draw()
 
@@ -169,6 +172,13 @@ def custom_solve():
                 mouse_x = event.pos[0]
                 mouse_y = event.pos[1]
 
+                if menu_button.is_over(mouse_x, mouse_y) and (menu_button.colour != (209, 209, 224)):
+                    menu_button.colour = (209, 209, 224)
+                    menu_button.draw()
+                elif (not menu_button.is_over(mouse_x, mouse_y)) and menu_button.colour != (179, 179, 204):
+                    menu_button.colour = (179, 179, 204)
+                    menu_button.draw()
+
                 if solve_button.is_over(mouse_x, mouse_y) and (solve_button.colour != (209, 209, 224)):
                     solve_button.colour = (209, 209, 224)
                     solve_button.draw()
@@ -186,6 +196,9 @@ def custom_solve():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_x = event.pos[0]
                 mouse_y = event.pos[1]
+
+                if menu_button.is_over(mouse_x, mouse_y):
+                    main_menu()
 
                 if clear_button.is_over(mouse_x, mouse_y):
                     clear_board(board, 270, 100)
@@ -299,6 +312,9 @@ def example_puzzle():
 
     screen.fill(background_colour)
 
+    menu_button = Button(5, 5, 75, 50, "Menu")
+    menu_button.draw()
+
     solve_button = Button(250, 25, 200, 50, "Solve Puzzle")
     solve_button.draw()
 
@@ -340,6 +356,13 @@ def example_puzzle():
                 mouse_x = event.pos[0]
                 mouse_y = event.pos[1]
 
+                if menu_button.is_over(mouse_x, mouse_y) and (menu_button.colour != (209, 209, 224)):
+                    menu_button.colour = (209, 209, 224)
+                    menu_button.draw()
+                elif (not menu_button.is_over(mouse_x, mouse_y)) and menu_button.colour != (179, 179, 204):
+                    menu_button.colour = (179, 179, 204)
+                    menu_button.draw()
+
                 if solve_button.is_over(mouse_x, mouse_y) and (solve_button.colour != (209, 209, 224)):
                     solve_button.colour = (209, 209, 224)
                     solve_button.draw()
@@ -379,6 +402,9 @@ def example_puzzle():
                 mouse_x = event.pos[0]
                 mouse_y = event.pos[1]
 
+                if menu_button.is_over(mouse_x, mouse_y):
+                    main_menu()
+
                 if clear_button.is_over(mouse_x, mouse_y):
                     clear_board(board, 270, 200)
 
@@ -407,6 +433,9 @@ def example_puzzle():
 def instructions_screen():
 
     screen.fill(background_colour)
+
+    menu_button = Button(5, 5, 75, 50, "Menu")
+    menu_button.draw()
 
     large_font = pygame.font.SysFont(None, 72)
     text = large_font.render("Application Instructions", True, (0, 0, 0))
@@ -451,6 +480,24 @@ def instructions_screen():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
+
+            if event.type == pygame.MOUSEMOTION:
+                mouse_x = event.pos[0]
+                mouse_y = event.pos[1]
+
+                if menu_button.is_over(mouse_x, mouse_y) and (menu_button.colour != (209, 209, 224)):
+                    menu_button.colour = (209, 209, 224)
+                    menu_button.draw()
+                elif (not menu_button.is_over(mouse_x, mouse_y)) and menu_button.colour != (179, 179, 204):
+                    menu_button.colour = (179, 179, 204)
+                    menu_button.draw()
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_x = event.pos[0]
+                mouse_y = event.pos[1]
+
+                if menu_button.is_over(mouse_x, mouse_y):
+                    main_menu()
 
         pygame.display.update()
 
