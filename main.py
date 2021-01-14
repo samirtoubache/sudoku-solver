@@ -13,6 +13,11 @@ pygame.display.set_caption("Pygame test")
 
 screen.fill(background_colour)
 
+number_font = pygame.font.Font('times-new-roman.ttf', 48)
+large_font = pygame.font.Font('times-new-roman.ttf', 72)
+normal_font = pygame.font.Font('times-new-roman.ttf', 30)
+small_font = pygame.font.Font('times-new-roman.ttf', 24)
+
 
 class Button:
     def __init__(self, pos_x, pos_y, width, height, text):
@@ -26,8 +31,7 @@ class Button:
     def draw(self):
         pygame.draw.rect(screen, self.colour, pygame.Rect(self.pos_x, self.pos_y, self.width, self.height))
 
-        font = pygame.font.SysFont(None, 32)
-        button_text = font.render(self.text, True, (0, 0, 0))
+        button_text = normal_font.render(self.text, True, (0, 0, 0))
 
         screen.blit(button_text, (self.pos_x + (self.width / 2 - button_text.get_width() / 2),
                                   self.pos_y + (self.height / 2 - button_text.get_height() / 2)))
@@ -67,12 +71,10 @@ class SudokuBoard:
         board_num = self.board[pos_y][pos_x]
 
         # Adjust x and y to properly fit number in a square
-        num_x += 17
-        num_y += 10
+        num_x += 15
 
         if board_num != 0:
-            font = pygame.font.SysFont(None, 48)
-            text = font.render(str(board_num), True, (0, 0, 0))
+            text = number_font.render(str(board_num), True, (0, 0, 0))
             screen.blit(text, (num_x, num_y))
 
     def print_board_gui(self):
@@ -129,8 +131,6 @@ class SudokuBoard:
 
 def custom_solve():
     screen.fill(background_colour)
-
-    font = pygame.font.SysFont(None, 48)
 
     menu_button = Button(5, 5, 75, 50, "Menu")
     menu_button.draw()
@@ -222,20 +222,22 @@ def custom_solve():
 
                     if num != -1:
 
-                        num_x = 270 + 51 * pos_x + 17
-                        num_y = 100 + 51 * pos_y + 10
+                        num_x = 270 + 51 * pos_x
+                        num_y = 100 + 51 * pos_y
 
                         if num == 0:
-                            square = pygame.Rect(num_x, num_y, 30, 35)
+                            square = pygame.Rect(num_x + 1, num_y + 1, 49, 49)
                             pygame.draw.rect(screen, (255, 255, 255), square)
 
                         else:
                             # If there is another number on the board, hide it first
                             if sudoku_puzzle.board[pos_y][pos_x] != 0:
-                                square = pygame.Rect(num_x, num_y, 30, 35)
+                                square = pygame.Rect(num_x + 1, num_y + 1, 49, 49)
                                 pygame.draw.rect(screen, (255, 255, 255), square)
 
-                            text = font.render(str(num), True, (0, 0, 0))
+                            num_x += 15
+
+                            text = number_font.render(str(num), True, (0, 0, 0))
 
                             screen.blit(text, (num_x, num_y))
 
@@ -247,9 +249,7 @@ def custom_solve():
 def main_menu():
     screen.fill(background_colour)
 
-    font = pygame.font.SysFont(None, 72)
-
-    text = font.render("Sudoku Solver", True, (0, 0, 0))
+    text = large_font.render("Sudoku Solver", True, (0, 0, 0))
 
     screen.blit(text, ((window_width / 2 - text.get_width() / 2), 100))
 
@@ -392,42 +392,39 @@ def instructions_screen():
     menu_button = Button(5, 5, 75, 50, "Menu")
     menu_button.draw()
 
-    large_font = pygame.font.SysFont(None, 72)
     text = large_font.render("Application Instructions", True, (0, 0, 0))
     screen.blit(text, ((window_width / 2 - text.get_width() / 2), 100))
 
-    normal_font = pygame.font.SysFont(None, 24)
-
-    text = normal_font.render("Thanks for using my application, here is some information on how to use this program.",
-                              True, (0, 0, 0))
+    text = small_font.render("Thanks for using my application, here is some information on how to use this program.",
+                             True, (0, 0, 0))
     screen.blit(text, (100, 250))
 
-    text = normal_font.render("There are two modes of the program, example puzzle mode and custom mode.",
-                              True, (0, 0, 0))
+    text = small_font.render("There are two modes of the program, example puzzle mode and custom mode.",
+                             True, (0, 0, 0))
     screen.blit(text, (100, 275))
 
-    text = normal_font.render("The example puzzle mode lets you choose a saved easy, medium or hard puzzle to solve.",
-                              True, (0, 0, 0))
+    text = small_font.render("The example puzzle mode lets you choose a saved easy, medium or hard puzzle to solve.",
+                             True, (0, 0, 0))
     screen.blit(text, (100, 350))
 
-    text = normal_font.render("The custom puzzle mode starts with a blank board where you can add your own numbers",
-                              True, (0, 0, 0))
+    text = small_font.render("The custom puzzle mode starts with a blank board where you can add your own numbers",
+                             True, (0, 0, 0))
     screen.blit(text, (100, 400))
 
-    text = normal_font.render("by pressing a number key and clicking on the square you want to add the number to,",
-                              True, (0, 0, 0))
+    text = small_font.render("by pressing a number key and clicking on the square you want to add the number to,",
+                             True, (0, 0, 0))
     screen.blit(text, (100, 425))
 
-    text = normal_font.render("you would then be able to solve the puzzle you entered with the solve button.",
-                              True, (0, 0, 0))
+    text = small_font.render("you would then be able to solve the puzzle you entered with the solve button.",
+                             True, (0, 0, 0))
     screen.blit(text, (100, 450))
 
-    text = normal_font.render("This program should be able to solve any sudoku puzzle, but note that more complex",
-                              True, (0, 0, 0))
+    text = small_font.render("This program should be able to solve any sudoku puzzle, but note that more complex",
+                             True, (0, 0, 0))
     screen.blit(text, (100, 500))
 
-    text = normal_font.render("puzzles may take 10-15 seconds to solve.",
-                              True, (0, 0, 0))
+    text = small_font.render("puzzles may take 10-15 seconds to solve.",
+                             True, (0, 0, 0))
     screen.blit(text, (100, 525))
 
     while True:
