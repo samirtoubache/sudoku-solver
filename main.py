@@ -287,7 +287,7 @@ def main_menu():
                     example_puzzle()
 
                 if instruction_button.is_over(mouse_x, mouse_y):
-                    pass
+                    instructions_screen()
 
                 if custom_button.is_over(mouse_x, mouse_y):
                     custom_solve()
@@ -400,6 +400,57 @@ def example_puzzle():
                 if hard_button.is_over(mouse_x, mouse_y):
                     board = sample_puzzle("hard")
                     print_board_gui(board, 270, 200)
+
+        pygame.display.update()
+
+
+def instructions_screen():
+
+    screen.fill(background_colour)
+
+    large_font = pygame.font.SysFont(None, 72)
+    text = large_font.render("Application Instructions", True, (0, 0, 0))
+    screen.blit(text, ((window_width/2 - text.get_width()/2), 100))
+
+    normal_font = pygame.font.SysFont(None, 24)
+
+    text = normal_font.render("Thanks for using my application, here is some information on how to use this program.",
+                              True, (0, 0, 0))
+    screen.blit(text, (100, 250))
+
+    text = normal_font.render("There are two modes of the program, example puzzle mode and custom mode.",
+                              True, (0, 0, 0))
+    screen.blit(text, (100, 275))
+
+    text = normal_font.render("The example puzzle mode lets you choose a saved easy, medium or hard puzzle to solve.",
+                              True, (0, 0, 0))
+    screen.blit(text, (100, 350))
+
+    text = normal_font.render("The custom puzzle mode starts with a blank board where you can add your own numbers",
+                              True, (0, 0, 0))
+    screen.blit(text, (100, 400))
+
+    text = normal_font.render("by pressing a number key and clicking on the square you want to add the number to,",
+                              True, (0, 0, 0))
+    screen.blit(text, (100, 425))
+
+    text = normal_font.render("you would then be able to solve the puzzle you entered with the solve button.",
+                              True, (0, 0, 0))
+    screen.blit(text, (100, 450))
+
+    text = normal_font.render("This program should be able to solve any sudoku puzzle, but note that more complex",
+                              True, (0, 0, 0))
+    screen.blit(text, (100, 500))
+
+    text = normal_font.render("puzzles may take 10-15 seconds to solve.",
+                              True, (0, 0, 0))
+    screen.blit(text, (100, 525))
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
 
         pygame.display.update()
 
