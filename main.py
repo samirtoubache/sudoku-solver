@@ -29,8 +29,8 @@ class Button:
         font = pygame.font.SysFont(None, 32)
         button_text = font.render(self.text, True, (0, 0, 0))
 
-        screen.blit(button_text, (self.pos_x + (self.width/2 - button_text.get_width()/2),
-                    self.pos_y + (self.height/2 - button_text.get_height()/2)))
+        screen.blit(button_text, (self.pos_x + (self.width / 2 - button_text.get_width() / 2),
+                                  self.pos_y + (self.height / 2 - button_text.get_height() / 2)))
 
     def is_over(self, mouse_x, mouse_y):
         if self.pos_x < mouse_x < (self.pos_x + self.width):
@@ -56,13 +56,19 @@ class SudokuBoard:
         self.square_width = square_width
 
     def add_number_to_gui(self, pos_x, pos_y):
-        num_x = self.board_x + (self.square_width + 1) * pos_x + 17
-        num_y = self.board_y + (self.square_width + 1) * pos_y + 10
+        # Find the x any y coordinates of the top left corner of the square
+        num_x = self.board_x + (self.square_width + 1) * pos_x
+        num_y = self.board_y + (self.square_width + 1) * pos_y
 
-        square = pygame.Rect(num_x, num_y, 30, 35)
+        # cover the previous contents of this square using a white square
+        square = pygame.Rect(num_x + 1, num_y + 1, self.square_width - 1, self.square_width - 1)
         pygame.draw.rect(screen, (255, 255, 255), square)
 
         board_num = self.board[pos_y][pos_x]
+
+        # Adjust x and y to properly fit number in a square
+        num_x += 17
+        num_y += 10
 
         if board_num != 0:
             font = pygame.font.SysFont(None, 48)
@@ -83,7 +89,9 @@ class SudokuBoard:
 
     def draw_blank_board(self):
 
-        background = pygame.Rect(self.board_x, self.board_y, (self.square_width + 1) * 9 + 1, (self.square_width + 1) * 9 + 1)
+        background = pygame.Rect(self.board_x, self.board_y,
+                                 (self.square_width + 1) * 9 + 1, (self.square_width + 1) * 9 + 1)
+
         pygame.draw.rect(screen, (0, 0, 0), background)
 
         x = self.board_x + 1
@@ -102,13 +110,12 @@ class SudokuBoard:
     def clear_board(self):
         for i in range(0, 9):
             for j in range(0, 9):
-
                 self.board[i][j] = 0
 
-                num_x = self.board_x + (self.square_width + 1) * i + 17
-                num_y = self.board_y + (self.square_width + 1) * j + 10
+                num_x = self.board_x + (self.square_width + 1) * i
+                num_y = self.board_y + (self.square_width + 1) * j
 
-                square = pygame.Rect(num_x, num_y, 30, 35)
+                square = pygame.Rect(num_x + 1, num_y + 1, self.square_width - 1, self.square_width - 1)
                 pygame.draw.rect(screen, (255, 255, 255), square)
 
     def check_board_complete(self):
@@ -121,7 +128,6 @@ class SudokuBoard:
 
 
 def custom_solve():
-
     screen.fill(background_colour)
 
     font = pygame.font.SysFont(None, 48)
@@ -186,7 +192,7 @@ def custom_solve():
             if event.type == pygame.MOUSEMOTION:
                 mouse_x = event.pos[0]
                 mouse_y = event.pos[1]
-                
+
                 menu_button.hover_effect(mouse_x, mouse_y)
 
                 solve_button.hover_effect(mouse_x, mouse_y)
@@ -214,8 +220,6 @@ def custom_solve():
                     pos_x = (mouse_x - 270) // 51
                     pos_y = (mouse_y - 100) // 51
 
-                    print("Square: " + str(pos_x) + ", " + str(pos_y))
-
                     if num != -1:
 
                         num_x = 270 + 51 * pos_x + 17
@@ -241,14 +245,13 @@ def custom_solve():
 
 
 def main_menu():
-
     screen.fill(background_colour)
 
     font = pygame.font.SysFont(None, 72)
 
     text = font.render("Sudoku Solver", True, (0, 0, 0))
 
-    screen.blit(text, ((window_width/2 - text.get_width()/2), 100))
+    screen.blit(text, ((window_width / 2 - text.get_width() / 2), 100))
 
     example_button = Button(300, 200, 400, 50, "Solve Example Puzzle")
     example_button.draw()
@@ -292,7 +295,6 @@ def main_menu():
 
 
 def example_puzzle():
-
     screen.fill(background_colour)
 
     menu_button = Button(5, 5, 75, 50, "Menu")
@@ -385,7 +387,6 @@ def example_puzzle():
 
 
 def instructions_screen():
-
     screen.fill(background_colour)
 
     menu_button = Button(5, 5, 75, 50, "Menu")
@@ -393,7 +394,7 @@ def instructions_screen():
 
     large_font = pygame.font.SysFont(None, 72)
     text = large_font.render("Application Instructions", True, (0, 0, 0))
-    screen.blit(text, ((window_width/2 - text.get_width()/2), 100))
+    screen.blit(text, ((window_width / 2 - text.get_width() / 2), 100))
 
     normal_font = pygame.font.SysFont(None, 24)
 
@@ -494,7 +495,6 @@ def sample_puzzle(difficulty):
 
 
 def check_square(sudoku_puzzle, x_pos, y_pos):
-
     if y_pos >= 9:
         y_pos = 0
         x_pos += 1
@@ -530,7 +530,6 @@ def check_square(sudoku_puzzle, x_pos, y_pos):
 
 
 def check_square_value(sudoku_puzzle, x_pos, y_pos, value):
-
     # check row
     for y in range(0, 9):
         if sudoku_puzzle.board[x_pos][y] == value:
