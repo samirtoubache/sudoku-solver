@@ -232,12 +232,17 @@ def custom_solve():
 
                     pygame.display.update()
 
-                    while not sudoku_puzzle.check_board_complete():
+                    if check_starting_board(sudoku_puzzle):
                         if check_square(sudoku_puzzle, 0, 0):
                             sudoku_puzzle.print_board_gui()
-                            solve_button.text = "Solve Puzzle"
-                            solve_button.draw()
                             print("Done")
+                        else:
+                            print("Could not solve puzzle")
+                    else:
+                        print("Starting board is not valid")
+
+                    solve_button.text = "Solve Puzzle"
+                    solve_button.draw()
 
                 # if mouse is somewhere on the sudoku board
                 elif sudoku_puzzle.board_x < mouse_x < sudoku_puzzle.board_x + sudoku_puzzle.board_width and \
@@ -411,12 +416,14 @@ def example_puzzle():
                     
                     pygame.display.update()
 
-                    while not sudoku_puzzle.check_board_complete():
-                        if check_square(sudoku_puzzle, 0, 0):
-                            sudoku_puzzle.print_board_gui()
-                            solve_button.text = "Solve Puzzle"
-                            solve_button.draw()
-                            print("Done")
+                    if check_square(sudoku_puzzle, 0, 0):
+                        sudoku_puzzle.print_board_gui()
+                        print("Done")
+                    else:
+                        print("Could not solve puzzle")
+
+                    solve_button.text = "Solve Puzzle"
+                    solve_button.draw()
 
                 if easy_button.is_over(mouse_x, mouse_y):
                     sudoku_puzzle.board = sample_puzzle("easy")
@@ -601,6 +608,18 @@ def check_square_value(sudoku_puzzle, x_pos, y_pos, value):
         for j in range(y_start, y_start + 3):
             if sudoku_puzzle.board[i][j] == value:
                 return False
+
+    return True
+
+
+# check if all the numbers on the board follow the rules of Sudoku
+def check_starting_board(sudoku_puzzle):
+    for i in range(0, 9):
+        for j in range(0, 9):
+            if sudoku_puzzle.board[i][j] != 0:
+                # the value in the square is not valid, return false
+                if not check_square_value(sudoku_puzzle, i, j, sudoku_puzzle.board[i][j]):
+                    return False
 
     return True
 
