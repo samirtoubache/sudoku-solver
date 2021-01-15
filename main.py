@@ -146,7 +146,7 @@ class SudokuBoard:
 def custom_solve():
     screen.fill(background_colour)
 
-    menu_button = Button(5, 5, 75, 50, "Menu")
+    menu_button = Button(5, 5, 100, 50, "Menu")
     menu_button.draw()
 
     solve_button = Button(250, 25, 200, 50, "Solve Puzzle")
@@ -227,9 +227,16 @@ def custom_solve():
 
                 if solve_button.is_over(mouse_x, mouse_y):
 
+                    solve_button.text = "Solving..."
+                    solve_button.draw()
+
+                    pygame.display.update()
+
                     while not sudoku_puzzle.check_board_complete():
                         if check_square(sudoku_puzzle, 0, 0):
                             sudoku_puzzle.print_board_gui()
+                            solve_button.text = "Solve Puzzle"
+                            solve_button.draw()
                             print("Done")
 
                 # if mouse is somewhere on the sudoku board
@@ -329,7 +336,7 @@ def main_menu():
 def example_puzzle():
     screen.fill(background_colour)
 
-    menu_button = Button(5, 5, 75, 50, "Menu")
+    menu_button = Button(5, 5, 100, 50, "Menu")
     menu_button.draw()
 
     solve_button = Button(250, 25, 200, 50, "Solve Puzzle")
@@ -399,9 +406,16 @@ def example_puzzle():
 
                 if solve_button.is_over(mouse_x, mouse_y):
 
+                    solve_button.text = "Solving..."
+                    solve_button.draw()
+                    
+                    pygame.display.update()
+
                     while not sudoku_puzzle.check_board_complete():
                         if check_square(sudoku_puzzle, 0, 0):
                             sudoku_puzzle.print_board_gui()
+                            solve_button.text = "Solve Puzzle"
+                            solve_button.draw()
                             print("Done")
 
                 if easy_button.is_over(mouse_x, mouse_y):
@@ -423,7 +437,7 @@ def example_puzzle():
 def instructions_screen():
     screen.fill(background_colour)
 
-    menu_button = Button(5, 5, 75, 50, "Menu")
+    menu_button = Button(5, 5, 100, 50, "Menu")
     menu_button.draw()
 
     text = large_font.render("Application Instructions", True, (0, 0, 0))
