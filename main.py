@@ -227,9 +227,16 @@ def custom_solve():
 
                 if solve_button.is_over(mouse_x, mouse_y):
 
+                    solve_button.text = "Solving..."
+                    solve_button.draw()
+
+                    pygame.display.update()
+
                     while not sudoku_puzzle.check_board_complete():
                         if check_square(sudoku_puzzle, 0, 0):
                             sudoku_puzzle.print_board_gui()
+                            solve_button.text = "Solve Puzzle"
+                            solve_button.draw()
                             print("Done")
 
                 # if mouse is somewhere on the sudoku board
@@ -399,9 +406,16 @@ def example_puzzle():
 
                 if solve_button.is_over(mouse_x, mouse_y):
 
+                    solve_button.text = "Solving..."
+                    solve_button.draw()
+                    
+                    pygame.display.update()
+
                     while not sudoku_puzzle.check_board_complete():
                         if check_square(sudoku_puzzle, 0, 0):
                             sudoku_puzzle.print_board_gui()
+                            solve_button.text = "Solve Puzzle"
+                            solve_button.draw()
                             print("Done")
 
                 if easy_button.is_over(mouse_x, mouse_y):
