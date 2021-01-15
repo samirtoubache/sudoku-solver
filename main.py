@@ -9,7 +9,10 @@ window_height = 750
 screen = pygame.display.set_mode((window_width, window_height))
 background_colour = (255, 255, 255)
 
-pygame.display.set_caption("Pygame test")
+img = pygame.image.load("grid.JPG")
+
+pygame.display.set_icon(img)
+pygame.display.set_caption("Sudoku Solver")
 
 screen.fill(background_colour)
 
