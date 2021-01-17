@@ -300,7 +300,9 @@ def custom_solve():
 
                     pygame.display.update()
 
-                    if check_starting_board(sudoku_puzzle):
+                    board_valid = check_starting_board(sudoku_puzzle)
+
+                    if board_valid[0]:
                         if check_square(sudoku_puzzle, 0, 0):
                             sudoku_puzzle.print_board_gui()
                             print("Done")
@@ -316,7 +318,9 @@ def custom_solve():
                     else:
                         # Inputted board does not follow sudoku rules
                         print("Starting board is not valid")
-                        error_popup = Popup(300, 200, 400, 200, "Invalid Board\nPlease correct it")
+                        error_popup = Popup(300, 200, 400, 200, "Invalid Board\nOne or more squares are illegal\n" +
+                                                                "hint: check square " + str(board_valid[2] + 1) +
+                                                                ", " + str(board_valid[1] + 1))
                         error_popup.activate_popup()
 
                         # Redraw board when popup is closed
@@ -695,15 +699,16 @@ def check_square_value(sudoku_puzzle, x_pos, y_pos, value):
 
 
 # check if all the numbers on the board follow the rules of Sudoku
+# if board does not follow rules, return position of invalid square
 def check_starting_board(sudoku_puzzle):
     for i in range(0, 9):
         for j in range(0, 9):
             if sudoku_puzzle.board[i][j] != 0:
                 # the value in the square is not valid, return false
                 if not check_square_value(sudoku_puzzle, i, j, sudoku_puzzle.board[i][j]):
-                    return False
+                    return [False, i, j]
 
-    return True
+    return [True]
 
 
 # Press the green button in the gutter to run the script.
