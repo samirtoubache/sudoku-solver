@@ -47,13 +47,78 @@ class Button:
 
         return False
 
-    def hover_effect(self, mouse_x, mouse_y):
-        if self.is_over(mouse_x, mouse_y) and self.colour != (209, 209, 224):
-            self.colour = (209, 209, 224)
+    def hover_effect(self, mouse_x, mouse_y, hover_colour=(209, 209, 224)):
+        if self.is_over(mouse_x, mouse_y) and self.colour != hover_colour:
+            self.colour = hover_colour
             self.draw()
         elif (not self.is_over(mouse_x, mouse_y)) and self.colour != (179, 179, 204):
             self.colour = (179, 179, 204)
             self.draw()
+
+
+class Popup:
+    def __init__(self, pos_x, pos_y, width, height, text):
+        self.pos_x = pos_x
+        self.pos_y = pos_y
+        self.width = width
+        self.height = height
+        self.text = text
+
+    def draw(self):
+
+        popup_border = pygame.Rect(self.pos_x - 5, self.pos_y - 5, self.width + 10, self.height + 10)
+        pygame.draw.rect(screen, (0, 0, 0), popup_border)
+
+        close_button = pygame.Rect(self.pos_x, self.pos_y, 50, 50)
+        pygame.draw.rect(screen, (209, 209, 224), close_button)
+
+        popup = pygame.Rect(self.pos_x, self.pos_y, self.width, self.height)
+        pygame.draw.rect(screen, (255, 255, 255), popup)
+
+        text_list = self.text.split("\n")
+
+        num_lines = (len(text_list) * 2) + 1
+
+        for i in range(0, num_lines):
+            if i % 2 == 0:
+                text = ""
+
+            else:
+                index = i // 2
+                text = text_list[index]
+
+            popup_line = normal_font.render(text, True, (0, 0, 0))
+
+            screen.blit(popup_line, (self.pos_x + (self.width / 2 - popup_line.get_width() / 2),
+                                     self.pos_y + (self.height / num_lines) * i))
+
+    def activate_popup(self):
+        self.draw()
+
+        close_button = Button(self.pos_x, self.pos_y, 50, 50, "X")
+        close_button.draw()
+
+        while True:
+            for event in pygame.event.get():
+
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+                if event.type == pygame.MOUSEMOTION:
+                    mouse_x = event.pos[0]
+                    mouse_y = event.pos[1]
+
+                    close_button.hover_effect(mouse_x, mouse_y, (255, 51, 51))
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    mouse_x = event.pos[0]
+                    mouse_y = event.pos[1]
+
+                    if close_button.is_over(mouse_x, mouse_y):
+                        return
+
+            pygame.display.update()
 
 
 # Class to control the behaviour and appearance of sudoku board used in the GUI
@@ -413,7 +478,7 @@ def example_puzzle():
 
                     solve_button.text = "Solving..."
                     solve_button.draw()
-                    
+
                     pygame.display.update()
 
                     if check_square(sudoku_puzzle, 0, 0):
