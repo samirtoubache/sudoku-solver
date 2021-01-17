@@ -223,6 +223,9 @@ def custom_solve():
     clear_button = Button(550, 25, 200, 50, "Clear Puzzle")
     clear_button.draw()
 
+    number_popup = Popup(25, 150, 175, 400, "Enter a\nnumber to\nadd to\nthe board")
+    number_popup.draw()
+
     board = [
         [0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -272,6 +275,16 @@ def custom_solve():
                 elif event.key == pygame.K_9:
                     num = 9
 
+                if num != -1:
+                    if num == 0:
+                        number_popup.text = "Click on\na square\nto remove\na number\nfrom\nthe board.\n\n" \
+                                            "Or choose\nanother\nnumber"
+                        number_popup.draw()
+                    else:
+                        number_popup.text = "Click on\na square\nto add\n" + str(num) + "\nto the board.\n\n" \
+                                                                                        "Or choose\nanother\nnumber"
+                        number_popup.draw()
+
             # creates hover effect if mouse is over a button
             if event.type == pygame.MOUSEMOTION:
                 mouse_x = event.pos[0]
@@ -291,6 +304,8 @@ def custom_solve():
                     main_menu()
 
                 if clear_button.is_over(mouse_x, mouse_y):
+                    number_popup.text = "Enter a\nnumber to\nadd to\nthe board"
+                    number_popup.draw()
                     sudoku_puzzle.clear_board()
 
                 if solve_button.is_over(mouse_x, mouse_y):
@@ -305,6 +320,7 @@ def custom_solve():
                     if board_valid[0]:
                         if check_square(sudoku_puzzle, 0, 0):
                             sudoku_puzzle.print_board_gui()
+                            number_popup.text = "Board\nSolved\n\n\nClear puzzle\nto restart"
                             print("Done")
                         else:
                             # Inputted board has no solution
@@ -329,6 +345,8 @@ def custom_solve():
 
                     solve_button.text = "Solve Puzzle"
                     solve_button.draw()
+
+                    number_popup.draw()
 
                 # if mouse is somewhere on the sudoku board
                 elif sudoku_puzzle.board_x < mouse_x < sudoku_puzzle.board_x + sudoku_puzzle.board_width and \
