@@ -47,13 +47,81 @@ class Button:
 
         return False
 
-    def hover_effect(self, mouse_x, mouse_y):
-        if self.is_over(mouse_x, mouse_y) and self.colour != (209, 209, 224):
-            self.colour = (209, 209, 224)
+    def hover_effect(self, mouse_x, mouse_y, hover_colour=(209, 209, 224)):
+        if self.is_over(mouse_x, mouse_y) and self.colour != hover_colour:
+            self.colour = hover_colour
             self.draw()
         elif (not self.is_over(mouse_x, mouse_y)) and self.colour != (179, 179, 204):
             self.colour = (179, 179, 204)
             self.draw()
+
+
+# Class to control the behaviour and appearance of pop ups used in the GUI
+class Popup:
+    def __init__(self, pos_x, pos_y, width, height, text):
+        self.pos_x = pos_x
+        self.pos_y = pos_y
+        self.width = width
+        self.height = height
+        self.text = text
+
+    # render the pop up and its text onto the GUI, invoked in the activate_popup method
+    def draw(self):
+
+        popup_border = pygame.Rect(self.pos_x - 5, self.pos_y - 5, self.width + 10, self.height + 10)
+        pygame.draw.rect(screen, (0, 0, 0), popup_border)
+
+        close_button = pygame.Rect(self.pos_x, self.pos_y, 50, 50)
+        pygame.draw.rect(screen, (209, 209, 224), close_button)
+
+        popup = pygame.Rect(self.pos_x, self.pos_y, self.width, self.height)
+        pygame.draw.rect(screen, (255, 255, 255), popup)
+
+        text_list = self.text.split("\n")
+
+        num_lines = (len(text_list) * 2) + 1
+
+        for i in range(0, num_lines):
+            if i % 2 == 0:
+                text = ""
+
+            else:
+                index = i // 2
+                text = text_list[index]
+
+            popup_line = normal_font.render(text, True, (0, 0, 0))
+
+            screen.blit(popup_line, (self.pos_x + (self.width / 2 - popup_line.get_width() / 2),
+                                     self.pos_y + (self.height / num_lines) * i))
+
+    # invokes draw method to render pop up and adds a close button, closes pop up when close button is pressed
+    def activate_popup(self):
+        self.draw()
+
+        close_button = Button(self.pos_x, self.pos_y, 50, 50, "X")
+        close_button.draw()
+
+        while True:
+            for event in pygame.event.get():
+
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+                if event.type == pygame.MOUSEMOTION:
+                    mouse_x = event.pos[0]
+                    mouse_y = event.pos[1]
+
+                    close_button.hover_effect(mouse_x, mouse_y, (255, 51, 51))
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    mouse_x = event.pos[0]
+                    mouse_y = event.pos[1]
+
+                    if close_button.is_over(mouse_x, mouse_y):
+                        return
+
+            pygame.display.update()
 
 
 # Class to control the behaviour and appearance of sudoku board used in the GUI
@@ -232,14 +300,32 @@ def custom_solve():
 
                     pygame.display.update()
 
-                    if check_starting_board(sudoku_puzzle):
+                    board_valid = check_starting_board(sudoku_puzzle)
+
+                    if board_valid[0]:
                         if check_square(sudoku_puzzle, 0, 0):
                             sudoku_puzzle.print_board_gui()
                             print("Done")
                         else:
+                            # Inputted board has no solution
                             print("Could not solve puzzle")
+                            error_popup = Popup(300, 200, 400, 200, "Error\nBoard could not be solved")
+                            error_popup.activate_popup()
+
+                            # Redraw board when popup is closed
+                            sudoku_puzzle.draw_blank_board()
+                            sudoku_puzzle.print_board_gui()
                     else:
+                        # Inputted board does not follow sudoku rules
                         print("Starting board is not valid")
+                        error_popup = Popup(300, 200, 400, 200, "Invalid Board\nOne or more squares are illegal\n" +
+                                                                "hint: check square " + str(board_valid[2] + 1) +
+                                                                ", " + str(board_valid[1] + 1))
+                        error_popup.activate_popup()
+
+                        # Redraw board when popup is closed
+                        sudoku_puzzle.draw_blank_board()
+                        sudoku_puzzle.print_board_gui()
 
                     solve_button.text = "Solve Puzzle"
                     solve_button.draw()
@@ -413,7 +499,7 @@ def example_puzzle():
 
                     solve_button.text = "Solving..."
                     solve_button.draw()
-                    
+
                     pygame.display.update()
 
                     if check_square(sudoku_puzzle, 0, 0):
@@ -592,12 +678,12 @@ def check_square(sudoku_puzzle, x_pos, y_pos):
 def check_square_value(sudoku_puzzle, x_pos, y_pos, value):
     # check row
     for y in range(0, 9):
-        if sudoku_puzzle.board[x_pos][y] == value:
+        if sudoku_puzzle.board[x_pos][y] == value and y != y_pos:
             return False
 
     # check column
     for x in range(0, 9):
-        if sudoku_puzzle.board[x][y_pos] == value:
+        if sudoku_puzzle.board[x][y_pos] == value and x != x_pos:
             return False
 
     x_start = (x_pos // 3) * 3
@@ -606,22 +692,23 @@ def check_square_value(sudoku_puzzle, x_pos, y_pos, value):
     # check 3 x 3 square
     for i in range(x_start, x_start + 3):
         for j in range(y_start, y_start + 3):
-            if sudoku_puzzle.board[i][j] == value:
+            if sudoku_puzzle.board[i][j] == value and (i != x_pos and j != y_pos):
                 return False
 
     return True
 
 
 # check if all the numbers on the board follow the rules of Sudoku
+# if board does not follow rules, return position of invalid square
 def check_starting_board(sudoku_puzzle):
     for i in range(0, 9):
         for j in range(0, 9):
             if sudoku_puzzle.board[i][j] != 0:
                 # the value in the square is not valid, return false
                 if not check_square_value(sudoku_puzzle, i, j, sudoku_puzzle.board[i][j]):
-                    return False
+                    return [False, i, j]
 
-    return True
+    return [True]
 
 
 # Press the green button in the gutter to run the script.
