@@ -56,8 +56,8 @@ class Button:
             self.draw()
 
 
-# Class to control the behaviour and appearance of pop ups used in the GUI
-class Popup:
+# Class to control the behaviour and appearance of message boxes used in the GUI
+class Message:
     def __init__(self, pos_x, pos_y, width, height, text):
         self.pos_x = pos_x
         self.pos_y = pos_y
@@ -65,17 +65,17 @@ class Popup:
         self.height = height
         self.text = text
 
-    # render the pop up and its text onto the GUI, invoked in the activate_popup method
+    # render the message and its text onto the GUI, also invoked in the activate_popup method
     def draw(self):
 
-        popup_border = pygame.Rect(self.pos_x - 5, self.pos_y - 5, self.width + 10, self.height + 10)
-        pygame.draw.rect(screen, (0, 0, 0), popup_border)
+        message_border = pygame.Rect(self.pos_x - 5, self.pos_y - 5, self.width + 10, self.height + 10)
+        pygame.draw.rect(screen, (0, 0, 0), message_border)
 
         close_button = pygame.Rect(self.pos_x, self.pos_y, 50, 50)
         pygame.draw.rect(screen, (209, 209, 224), close_button)
 
-        popup = pygame.Rect(self.pos_x, self.pos_y, self.width, self.height)
-        pygame.draw.rect(screen, (255, 255, 255), popup)
+        message = pygame.Rect(self.pos_x, self.pos_y, self.width, self.height)
+        pygame.draw.rect(screen, (255, 255, 255), message)
 
         text_list = self.text.split("\n")
 
@@ -89,10 +89,10 @@ class Popup:
                 index = i // 2
                 text = text_list[index]
 
-            popup_line = normal_font.render(text, True, (0, 0, 0))
+            message_line = normal_font.render(text, True, (0, 0, 0))
 
-            screen.blit(popup_line, (self.pos_x + (self.width / 2 - popup_line.get_width() / 2),
-                                     self.pos_y + (self.height / num_lines) * i))
+            screen.blit(message_line, (self.pos_x + (self.width / 2 - message_line.get_width() / 2),
+                                       self.pos_y + (self.height / num_lines) * i))
 
     # invokes draw method to render pop up and adds a close button, closes pop up when close button is pressed
     def activate_popup(self):
@@ -223,8 +223,8 @@ def custom_solve():
     clear_button = Button(550, 25, 200, 50, "Clear Puzzle")
     clear_button.draw()
 
-    number_popup = Popup(25, 150, 175, 400, "Enter a\nnumber to\nadd to\nthe board")
-    number_popup.draw()
+    number_message = Message(25, 150, 175, 400, "Enter a\nnumber to\nadd to\nthe board")
+    number_message.draw()
 
     board = [
         [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -277,13 +277,13 @@ def custom_solve():
 
                 if num != -1:
                     if num == 0:
-                        number_popup.text = "Click on\na square\nto remove\na number\nfrom\nthe board.\n\n" \
-                                            "Or choose\nanother\nnumber"
-                        number_popup.draw()
+                        number_message.text = "Click on\na square\nto remove\na number\nfrom\nthe board.\n\n" \
+                                              "Or choose\nanother\nnumber"
+                        number_message.draw()
                     else:
-                        number_popup.text = "Click on\na square\nto add\n" + str(num) + "\nto the board.\n\n" \
-                                                                                        "Or choose\nanother\nnumber"
-                        number_popup.draw()
+                        number_message.text = "Click on\na square\nto add\n" + str(num) + "\nto the board.\n\n" \
+                                                                                          "Or choose\nanother\nnumber"
+                        number_message.draw()
 
             # creates hover effect if mouse is over a button
             if event.type == pygame.MOUSEMOTION:
@@ -304,8 +304,8 @@ def custom_solve():
                     main_menu()
 
                 if clear_button.is_over(mouse_x, mouse_y):
-                    number_popup.text = "Enter a\nnumber to\nadd to\nthe board"
-                    number_popup.draw()
+                    number_message.text = "Enter a\nnumber to\nadd to\nthe board"
+                    number_message.draw()
                     sudoku_puzzle.clear_board()
 
                 if solve_button.is_over(mouse_x, mouse_y):
@@ -320,12 +320,12 @@ def custom_solve():
                     if board_valid[0]:
                         if check_square(sudoku_puzzle, 0, 0):
                             sudoku_puzzle.print_board_gui()
-                            number_popup.text = "Board\nSolved\n\n\nClear puzzle\nto restart"
+                            number_message.text = "Board\nSolved\n\n\nClear puzzle\nto restart"
                             print("Done")
                         else:
                             # Inputted board has no solution
                             print("Could not solve puzzle")
-                            error_popup = Popup(300, 200, 400, 200, "Error\nBoard could not be solved")
+                            error_popup = Message(300, 200, 400, 200, "Error\nBoard could not be solved")
                             error_popup.activate_popup()
 
                             # Redraw board when popup is closed
@@ -334,9 +334,9 @@ def custom_solve():
                     else:
                         # Inputted board does not follow sudoku rules
                         print("Starting board is not valid")
-                        error_popup = Popup(300, 200, 400, 200, "Invalid Board\nOne or more squares are illegal\n" +
-                                                                "hint: check square " + str(board_valid[2] + 1) +
-                                                                ", " + str(board_valid[1] + 1))
+                        error_popup = Message(300, 200, 400, 200, "Invalid Board\nOne or more squares are illegal\n" +
+                                              "hint: check square " + str(board_valid[2] + 1) +
+                                              ", " + str(board_valid[1] + 1))
                         error_popup.activate_popup()
 
                         # Redraw board when popup is closed
@@ -346,7 +346,7 @@ def custom_solve():
                     solve_button.text = "Solve Puzzle"
                     solve_button.draw()
 
-                    number_popup.draw()
+                    number_message.draw()
 
                 # if mouse is somewhere on the sudoku board
                 elif sudoku_puzzle.board_x < mouse_x < sudoku_puzzle.board_x + sudoku_puzzle.board_width and \
