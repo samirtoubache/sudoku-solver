@@ -56,6 +56,7 @@ class Button:
             self.draw()
 
 
+# Class to control the behaviour and appearance of pop ups used in the GUI
 class Popup:
     def __init__(self, pos_x, pos_y, width, height, text):
         self.pos_x = pos_x
@@ -64,6 +65,7 @@ class Popup:
         self.height = height
         self.text = text
 
+    # render the pop up and its text onto the GUI, invoked in the activate_popup method
     def draw(self):
 
         popup_border = pygame.Rect(self.pos_x - 5, self.pos_y - 5, self.width + 10, self.height + 10)
@@ -92,6 +94,7 @@ class Popup:
             screen.blit(popup_line, (self.pos_x + (self.width / 2 - popup_line.get_width() / 2),
                                      self.pos_y + (self.height / num_lines) * i))
 
+    # invokes draw method to render pop up and adds a close button, closes pop up when close button is pressed
     def activate_popup(self):
         self.draw()
 
@@ -302,9 +305,23 @@ def custom_solve():
                             sudoku_puzzle.print_board_gui()
                             print("Done")
                         else:
+                            # Inputted board has no solution
                             print("Could not solve puzzle")
+                            error_popup = Popup(300, 200, 400, 200, "Error\nBoard could not be solved")
+                            error_popup.activate_popup()
+
+                            # Redraw board when popup is closed
+                            sudoku_puzzle.draw_blank_board()
+                            sudoku_puzzle.print_board_gui()
                     else:
+                        # Inputted board does not follow sudoku rules
                         print("Starting board is not valid")
+                        error_popup = Popup(300, 200, 400, 200, "Invalid Board\nPlease correct it")
+                        error_popup.activate_popup()
+
+                        # Redraw board when popup is closed
+                        sudoku_puzzle.draw_blank_board()
+                        sudoku_puzzle.print_board_gui()
 
                     solve_button.text = "Solve Puzzle"
                     solve_button.draw()
