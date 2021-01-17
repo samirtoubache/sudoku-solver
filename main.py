@@ -674,12 +674,12 @@ def check_square(sudoku_puzzle, x_pos, y_pos):
 def check_square_value(sudoku_puzzle, x_pos, y_pos, value):
     # check row
     for y in range(0, 9):
-        if sudoku_puzzle.board[x_pos][y] == value:
+        if sudoku_puzzle.board[x_pos][y] == value and y != y_pos:
             return False
 
     # check column
     for x in range(0, 9):
-        if sudoku_puzzle.board[x][y_pos] == value:
+        if sudoku_puzzle.board[x][y_pos] == value and x != x_pos:
             return False
 
     x_start = (x_pos // 3) * 3
@@ -688,7 +688,7 @@ def check_square_value(sudoku_puzzle, x_pos, y_pos, value):
     # check 3 x 3 square
     for i in range(x_start, x_start + 3):
         for j in range(y_start, y_start + 3):
-            if sudoku_puzzle.board[i][j] == value:
+            if sudoku_puzzle.board[i][j] == value and (i != x_pos and j != y_pos):
                 return False
 
     return True
