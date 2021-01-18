@@ -741,6 +741,10 @@ def sample_puzzle(difficulty):
 # tries another valid number if recursive function returns false
 # returns false in no valid number is found
 def check_square(sudoku_puzzle, x_pos, y_pos):
+
+    # lets pygame handle internal actions, prevents freezing when solving long, complex puzzles
+    pygame.event.pump()
+
     if y_pos >= 9:
         y_pos = 0
         x_pos += 1
