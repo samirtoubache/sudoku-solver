@@ -19,7 +19,7 @@ screen.fill(background_colour)
 number_font = pygame.font.Font('times-new-roman.ttf', 48)
 large_font = pygame.font.Font('times-new-roman.ttf', 72)
 normal_font = pygame.font.Font('times-new-roman.ttf', 30)
-small_font = pygame.font.Font('times-new-roman.ttf', 24)
+small_font = pygame.font.Font('times-new-roman.ttf', 22)
 
 
 # Class to control the behaviour and appearance of buttons used in the GUI
@@ -217,6 +217,9 @@ def custom_solve():
     menu_button = Button(5, 5, 100, 50, "Menu")
     menu_button.draw()
 
+    help_button = Button(110, 5, 50, 50, "?")
+    help_button.draw()
+
     solve_button = Button(250, 25, 200, 50, "Solve Puzzle")
     solve_button.draw()
 
@@ -292,6 +295,8 @@ def custom_solve():
 
                 menu_button.hover_effect(mouse_x, mouse_y)
 
+                help_button.hover_effect(mouse_x, mouse_y)
+
                 solve_button.hover_effect(mouse_x, mouse_y)
 
                 clear_button.hover_effect(mouse_x, mouse_y)
@@ -302,6 +307,18 @@ def custom_solve():
 
                 if menu_button.is_over(mouse_x, mouse_y):
                     main_menu()
+
+                if help_button.is_over(mouse_x, mouse_y):
+                    help_popup = Message(280, 150, 440, 350, "Instructions\nClick number key to select\n" +
+                                                             "a number. Then click square\n" +
+                                                             "to add selected number.\n" +
+                                                             "To remove number, press zero key\n" +
+                                                             "then click on number you want to\n" +
+                                                             "remove. Click solve puzzle button\n" +
+                                                             " when ready to solve.")
+                    help_popup.activate_popup()
+                    sudoku_puzzle.draw_blank_board()
+                    sudoku_puzzle.print_board_gui()
 
                 if clear_button.is_over(mouse_x, mouse_y):
                     number_message.text = "Enter a\nnumber to\nadd to\nthe board"
@@ -405,8 +422,8 @@ def main_menu():
     custom_button = Button(300, 400, 400, 50, "Solve Custom Puzzle")
     custom_button.draw()
 
-    instruction_button = Button(300, 500, 400, 50, "Read Instructions")
-    instruction_button.draw()
+    about_button = Button(300, 500, 400, 50, "About Sudoku Solver")
+    about_button.draw()
 
     while True:
         for event in pygame.event.get():
@@ -423,7 +440,7 @@ def main_menu():
 
                 custom_button.hover_effect(mouse_x, mouse_y)
 
-                instruction_button.hover_effect(mouse_x, mouse_y)
+                about_button.hover_effect(mouse_x, mouse_y)
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_x = event.pos[0]
@@ -432,8 +449,8 @@ def main_menu():
                 if example_button.is_over(mouse_x, mouse_y):
                     example_puzzle()
 
-                if instruction_button.is_over(mouse_x, mouse_y):
-                    instructions_screen()
+                if about_button.is_over(mouse_x, mouse_y):
+                    about_screen()
 
                 if custom_button.is_over(mouse_x, mouse_y):
                     custom_solve()
@@ -447,6 +464,9 @@ def example_puzzle():
 
     menu_button = Button(5, 5, 100, 50, "Menu")
     menu_button.draw()
+
+    help_button = Button(110, 5, 50, 50, "?")
+    help_button.draw()
 
     solve_button = Button(250, 25, 200, 50, "Solve Puzzle")
     solve_button.draw()
@@ -493,6 +513,8 @@ def example_puzzle():
 
                 menu_button.hover_effect(mouse_x, mouse_y)
 
+                help_button.hover_effect(mouse_x, mouse_y)
+
                 solve_button.hover_effect(mouse_x, mouse_y)
 
                 easy_button.hover_effect(mouse_x, mouse_y)
@@ -509,6 +531,18 @@ def example_puzzle():
 
                 if menu_button.is_over(mouse_x, mouse_y):
                     main_menu()
+
+                if help_button.is_over(mouse_x, mouse_y):
+                    help_popup = Message(280, 250, 440, 350, "Instructions\nSelect difficulty\n" +
+                                                             "to load sample puzzle.\n" +
+                                                             "Then click the solve button to\n" +
+                                                             "solve the puzzle.\n" +
+                                                             "Puzzle may take several\n" +
+                                                             "seconds to solve, puzzle will be\n" +
+                                                             "displayed when it is complete.")
+                    help_popup.activate_popup()
+                    sudoku_puzzle.draw_blank_board()
+                    sudoku_puzzle.print_board_gui()
 
                 if clear_button.is_over(mouse_x, mouse_y):
                     sudoku_puzzle.clear_board()
@@ -545,46 +579,95 @@ def example_puzzle():
 
 
 # Clears old screen then add the instruction text in the instructions page
-def instructions_screen():
+def about_screen():
     screen.fill(background_colour)
 
     menu_button = Button(5, 5, 100, 50, "Menu")
     menu_button.draw()
 
-    text = large_font.render("Application Instructions", True, (0, 0, 0))
-    screen.blit(text, ((window_width / 2 - text.get_width() / 2), 100))
+    text_y_pos = 25
+    text_x_pos = 50
+    small_offset = 25
+    medium_offset = 60
+    large_offset = 150
 
-    text = small_font.render("Thanks for using my application, here is some information on how to use this program.",
+    text = large_font.render("About Sudoku Solver", True, (0, 0, 0))
+    screen.blit(text, ((window_width / 2 - text.get_width() / 2), text_y_pos))
+
+    text_y_pos += large_offset
+
+    text = small_font.render("This application finds the solution to any solvable Sudoku puzzle.",
                              True, (0, 0, 0))
-    screen.blit(text, (100, 250))
+    screen.blit(text, (text_x_pos, text_y_pos))
+
+    text_y_pos += small_offset
 
     text = small_font.render("There are two modes of the program, example puzzle mode and custom mode.",
                              True, (0, 0, 0))
-    screen.blit(text, (100, 275))
+    screen.blit(text, (text_x_pos, text_y_pos))
+
+    text_y_pos += medium_offset
 
     text = small_font.render("The example puzzle mode lets you choose a saved easy, medium or hard puzzle to solve.",
                              True, (0, 0, 0))
-    screen.blit(text, (100, 350))
+    screen.blit(text, (text_x_pos, text_y_pos))
+
+    text_y_pos += small_offset
+
+    text = small_font.render("You can try solving these puzzles on your own before letting the program solve " +
+                             "the puzzle.", True, (0, 0, 0))
+    screen.blit(text, (text_x_pos, text_y_pos))
+
+    text_y_pos += medium_offset
 
     text = small_font.render("The custom puzzle mode starts with a blank board where you can add your own numbers",
                              True, (0, 0, 0))
-    screen.blit(text, (100, 400))
+    screen.blit(text, (text_x_pos, text_y_pos))
+
+    text_y_pos += small_offset
 
     text = small_font.render("by pressing a number key and clicking on the square you want to add the number to,",
                              True, (0, 0, 0))
-    screen.blit(text, (100, 425))
+    screen.blit(text, (text_x_pos, text_y_pos))
 
-    text = small_font.render("you would then be able to solve the puzzle you entered with the solve button.",
-                             True, (0, 0, 0))
-    screen.blit(text, (100, 450))
+    text_y_pos += small_offset
 
-    text = small_font.render("This program should be able to solve any sudoku puzzle, but note that more complex",
+    text = small_font.render("After adding the numbers to the board, the program can then solve the Sudoku puzzle.",
                              True, (0, 0, 0))
-    screen.blit(text, (100, 500))
+    screen.blit(text, (text_x_pos, text_y_pos))
 
-    text = small_font.render("puzzles may take 10-15 seconds to solve.",
+    text_y_pos += medium_offset
+
+    text = small_font.render("This program uses a backtracking algorithm to solve the Sudoku puzzles, this means that",
                              True, (0, 0, 0))
-    screen.blit(text, (100, 525))
+    screen.blit(text, (text_x_pos, text_y_pos))
+
+    text_y_pos += small_offset
+
+    text = small_font.render("this program can solve any solvable Sudoku puzzle, but it may take up to 30 seconds",
+                             True, (0, 0, 0))
+    screen.blit(text, (text_x_pos, text_y_pos))
+
+    text_y_pos += small_offset
+
+    text = small_font.render("or longer depending on the complexity of the puzzle.", True, (0, 0, 0))
+    screen.blit(text, (text_x_pos, text_y_pos))
+
+    text_y_pos += medium_offset
+
+    text = small_font.render("This program was created by Samir Toubache, if you want to see any of my other work or",
+                             True, (0, 0, 0))
+    screen.blit(text, (text_x_pos, text_y_pos))
+
+    text_y_pos += small_offset
+
+    text = small_font.render("report an issue, feel free to visit my GitHub account: samirtoubache", True, (0, 0, 0))
+    screen.blit(text, (text_x_pos, text_y_pos))
+
+    text_y_pos += small_offset
+
+    text = small_font.render("or email me at toubaches@outlook.com", True, (0, 0, 0))
+    screen.blit(text, (text_x_pos, text_y_pos))
 
     while True:
         for event in pygame.event.get():
