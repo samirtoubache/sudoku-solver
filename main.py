@@ -217,6 +217,9 @@ def custom_solve():
     menu_button = Button(5, 5, 100, 50, "Menu")
     menu_button.draw()
 
+    help_button = Button(110, 5, 50, 50, "?")
+    help_button.draw()
+
     solve_button = Button(250, 25, 200, 50, "Solve Puzzle")
     solve_button.draw()
 
@@ -292,6 +295,8 @@ def custom_solve():
 
                 menu_button.hover_effect(mouse_x, mouse_y)
 
+                help_button.hover_effect(mouse_x, mouse_y)
+
                 solve_button.hover_effect(mouse_x, mouse_y)
 
                 clear_button.hover_effect(mouse_x, mouse_y)
@@ -302,6 +307,18 @@ def custom_solve():
 
                 if menu_button.is_over(mouse_x, mouse_y):
                     main_menu()
+
+                if help_button.is_over(mouse_x, mouse_y):
+                    help_popup = Message(280, 150, 440, 350, "Instructions\nClick number key to select\n" +
+                                                             "a number. Then click square\n" +
+                                                             "to add selected number.\n" +
+                                                             "To remove number, press zero key\n" +
+                                                             "then click on number you want to\n" +
+                                                             "remove. Click solve puzzle button\n" +
+                                                             " when ready to solve.")
+                    help_popup.activate_popup()
+                    sudoku_puzzle.draw_blank_board()
+                    sudoku_puzzle.print_board_gui()
 
                 if clear_button.is_over(mouse_x, mouse_y):
                     number_message.text = "Enter a\nnumber to\nadd to\nthe board"
